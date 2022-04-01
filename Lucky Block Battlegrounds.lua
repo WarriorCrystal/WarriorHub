@@ -43,5 +43,8 @@
             OthersSection:NewButton("Unnamed ESP", "Executes Unnamed ESP", function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/ic3w0lf22/Unnamed-ESP/master/UnnamedESP.lua", true))()
             end)
+           OthersSection:NewKeybind("Toggle GUI", "Bind for toggling the GUI", Enum.KeyCode.RSHIFT, function()
+	           Library:ToggleUI()
+                end)
 
 
