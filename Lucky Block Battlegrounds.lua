@@ -43,3 +43,10 @@
             OthersSection:NewButton("Unnamed ESP", "Executes Unnamed ESP", function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/ic3w0lf22/Unnamed-ESP/master/UnnamedESP.lua", true))()
             end)
+       for theme, color in pairs(themes) do
+    OthersSection:NewColorPicker(theme, "Change your "..theme, color, function(color3)
+        Library:ChangeColor(theme, color3)
+    end)
+end
+
+
