@@ -217,6 +217,7 @@ end)
 OthersSection:NewKeybind("Toggle GUI", "Toggles GUI", Enum.KeyCode.RSHIFT, function()
     Library:ToggleUI()
 end)
+OthersSection:NewLabel("invite: discord.gg/AvjPbX6wcn")
 
 
 
