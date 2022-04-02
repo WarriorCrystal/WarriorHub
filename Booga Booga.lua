@@ -1,7 +1,5 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
 local Window = Library.CreateLib("WarriorHub | Booga Booga", "BloodTheme")
-local inviteModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Discord%20Inviter/Source.lua"))()
-inviteModule.Join("https://discord.gg/AvjPbX6wcn")
 
 local Main = Window:NewTab("Main")
 local MainS = Main:NewSection("Main | Read module descriptions")
