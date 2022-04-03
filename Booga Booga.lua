@@ -76,6 +76,75 @@ MainS:NewButton("Remove Rain", "Removes rain", function()
         game.ReplicatedStorage.Skies.Shine:Clone().Parent = game.Lighting
     end
 end)
+
+local Mob = Window:NewTab("Shelly Teleports")
+local MobSection = Mob:NewSection("Useful to get Goober Bag")
+
+MobSection:NewButton("Big Ice Shelly", "Teleports you to the selected shelly", function()
+    game.Players.LocalPlayer.Character:MoveTo(Vector3.new(718, -3, -1912))
+end)
+MobSection:NewButton("Big Ice Shelly 2", "Teleports you to the selected shelly", function()
+    game.Players.LocalPlayer.Character:MoveTo(Vector3.new(556, -3, -1708))
+end)
+MobSection:NewButton("Giant Shelly", "Teleports you to the selected shelly", function()
+    game.Players.LocalPlayer.Character:MoveTo(Vector3.new(83, -3, -582))
+end)
+
+local Places = Window:NewTab("Place Teleports")
+local PlaceSection = Places:NewSection("Places")
+
+PlaceSection:NewButton("First Floating Island", "Teleports you to the selected place", function()
+    game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-129, 237, -748))
+end)
+PlaceSection:NewButton("Second Floating Island", "Teleports you to the selected place", function()
+    game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-549, 311, -1211))
+end)
+PlaceSection:NewButton("Third Floating Island", "Teleports you to the selected place", function()
+    game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-1132, 309, -1201))
+end)
+PlaceSection:NewButton("Unrecheable Place to make a Base", "Teleports you to the selected place", function()
+    game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-1031, -115, -657))
+end)
+PlaceSection:NewButton("Ancient Cave", "Teleports you to the selected place", function()
+    game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-1119, -179, -736))
+end)
+PlaceSection:NewButton("Adurite Cave", "Teleports you to the selected place", function()
+    game.Players.LocalPlayer.Character:MoveTo(Vector3.new(1131, -153, 1190))
+end)
+
+local XP = Window:NewTab("XP Teleports")
+local XPSection = XP:NewSection("Breaking this things you can get xp orbs")
+
+XPSection:NewButton("Ancient Tree (Best)", "Teleports you to the selected place", function()
+    game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-549, 310, -1205))
+end)
+XPSection:NewButton("Ancient Feather Tree", "Teleports you to the selected place", function()
+    game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-156, 237, -837))
+end)
+XPSection:NewButton("Double Moai", "Teleports you to the selected place", function()
+    game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-46, 237, -710))
+end)
+XPSection:NewButton("Moai", "Teleports you to the selected place", function()
+    game.Players.LocalPlayer.Character:MoveTo(Vector3.new(111, 0, -781))
+end)
+XPSection:NewButton("Moai 2", "Teleports you to the selected place", function()
+    game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-1070, -196, -786))
+end)
+XPSection:NewButton("Moai 3", "Teleports you to the selected place", function()
+    game.Players.LocalPlayer.Character:MoveTo(Vector3.new(1152, -152, 1178))
+end)
+XPSection:NewButton("Moai 4", "Teleports you to the selected place", function()
+    game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-215, -3, -266))
+end)
+XPSection:NewButton("Moai 5", "Teleports you to the selected place", function()
+    game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-1152, 309, -1212))
+end)
+XPSection:NewButton("Moai 6", "Teleports you to the selected place", function()
+    game.Players.LocalPlayer.Character:MoveTo(Vector3.new(233, -2, -654))
+end)
+
+
+
 local Recipes = Window:NewTab("Adurite Recipes")
 local Adurite = Recipes:NewSection("Adurite Items")
 
@@ -217,14 +286,3 @@ end)
 OthersSection:NewKeybind("Toggle GUI", "Toggles GUI", Enum.KeyCode.RSHIFT, function()
     Library:ToggleUI()
 end)
-OthersSection:NewLabel("invite: discord.gg/AvjPbX6wcn")
-
-
-
-
-
-
-
-
-
-
