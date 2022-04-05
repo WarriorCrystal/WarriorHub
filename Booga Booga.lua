@@ -1,5 +1,5 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("WarriorHub | Booga Booga", "BloodTheme")
+local Window = Library.CreateLib("WarriorHub | Booga Booga Classic", "BloodTheme")
 
 local Main = Window:NewTab("Main")
 local MainS = Main:NewSection("Main | Read module descriptions")
@@ -274,6 +274,15 @@ OtherR:NewButton("Radio Pack", "", function()
     local Event = game:GetService("ReplicatedStorage").Events.CraftItem
     Event:FireServer(A_1)
 end)
+
+local OtherRC = ORecipes:NewSection("Write the name of the item to Craft")
+OtherRC:NewTextBox("Write item name", "", function(ItemName)
+    local A_1   = ItemName
+    local Event = game:GetService("ReplicatedStorage").Events.CraftItem
+    Event:FireServer(A_1)
+end)
+
+
 
 local Others = Window:NewTab("Others")
 local OthersSection = Others:NewSection("Others")
