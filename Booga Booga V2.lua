@@ -79,6 +79,7 @@ Main:Button("Remove Rain", function()
         game.ReplicatedStorage.Skies.Shine:Clone().Parent = game.Lighting
     end
 end)
+
 Main:Toggle("Auto Break Ancient Tree (Put axe on slot 3)",false, function(bool)
     if bool == true then
         loop = true
@@ -99,10 +100,10 @@ Main:Toggle("Auto Break Ancient Tree (Put axe on slot 3)",false, function(bool)
         loop = false
     end
 end)
-Main:Toggle("Auto Mine Mag (Put pick on slot 2)",false, function(bool)
+Main:Toggle("Auto Mine Mag Ore (Put pick on slot 2)",false, function(bool)
     if bool == true then
         loop = true
-        local afNumber13 = 2
+        local afNumber13 = 3
         game:GetService("ReplicatedStorage").Events.EquipTool:FireServer(afNumber13)
         game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-1172, 287, -1199))
         while loop and wait(0.2) do
@@ -117,6 +118,31 @@ Main:Toggle("Auto Mine Mag (Put pick on slot 2)",false, function(bool)
         loop = false
     end
 end)
+Main:Toggle("Auto Mine Mag Totem (Put axe on slot 3)",false, function(bool)
+    if bool == true then
+        loop = true
+        local afNumber13 = 3
+        game:GetService("ReplicatedStorage").Events.EquipTool:FireServer(afNumber13)
+        game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-1172, 287, -1199))
+        while loop and wait(0.2) do
+            local af2Number1 = game:GetService("ReplicatedStorage").RelativeTime.Value
+            local af2Table2 = {
+                [1] = workspace.Resources["Totem of the Moon"].Wood,
+                [2] = workspace.Resources["Totem of the Moon"].Reference,
+                [3] = workspace.Resources["Totem of the Moon"].Wood,
+                [4] = workspace.Resources["Totem of the Moon"].Coloration,
+                [5] = workspace.Resources["Totem of the Moon"].Wood,
+                [6] = workspace.Resources["Totem of the Moon"].Coloration,
+                [7] = workspace.Resources["Totem of the Moon"].Wood
+            }
+            game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(af2Number1, af2Table2)
+        end
+    end
+    if bool == false then
+        loop = false
+    end
+end)
+game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(ohNumber1, ohTable2)
 Main:Button("Place Chest Campfire", function()
     local Fires = 1
     local Event = game:GetService("ReplicatedStorage").Events.PlaceStructure
