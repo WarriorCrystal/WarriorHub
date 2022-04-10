@@ -117,6 +117,22 @@ Main:Toggle("Auto Mine Mag (Put pick on slot 2)",false, function(bool)
         loop = false
     end
 end)
+Main:Textbox("Tp Spam", "Write victim name", true, function(t)
+    for i,v in pairs(game:GetService("Players"):GetChildren()) do
+        if v.Name:lower():find(t:lower()) then
+            if v.Name == "valensoysantijajaja" then
+                DiscordLib:Notification("Notification", "Lmao you can't kill based people", "Sorry")
+            else
+                player = game.Players.LocalPlayer.Character
+                repeat
+                    player.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
+                    wait(.001)
+                until v.Character.Humanoid.Health <= 0
+            end
+        end
+    end
+end)
+
 
 local Crafting = serv:Channel("Crafting")
 
