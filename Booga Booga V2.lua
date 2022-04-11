@@ -80,69 +80,9 @@ Main:Button("Remove Rain", function()
     end
 end)
 
-Main:Toggle("Auto Break Ancient Tree (Put axe on slot 3)",false, function(bool)
-    if bool == true then
-        loop = true
-        local afNumber13 = 3
-        game:GetService("ReplicatedStorage").Events.EquipTool:FireServer(afNumber13)
-        game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-563, 311, -1188))
-        while loop and wait(0.2) do
-            local afNumber1 = game:GetService("ReplicatedStorage").RelativeTime.Value
-            local afTable2 = {
-                [1] = workspace["Spirit Lock"].Union,
-                [2] = workspace.Resources["Ancient Tree"].Trunk,
-                [3] = workspace.Resources["Ancient Tree"].Reference
-            }
-            game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(afNumber1, afTable2)
-        end
-    end
-    if bool == false then
-        loop = false
-    end
-end)
-Main:Toggle("Auto Mine Mag Ore (Put pick on slot 2)",false, function(bool)
-    if bool == true then
-        loop = true
-        local afNumber13 = 3
-        game:GetService("ReplicatedStorage").Events.EquipTool:FireServer(afNumber13)
-        game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-1172, 287, -1199))
-        while loop and wait(0.2) do
-            local af2Number1 = game:GetService("ReplicatedStorage").RelativeTime.Value
-            local af2Table2 = {
-                [1] = workspace.Resources["Magnetite Iceberg"]["Magnetite Ice"]
-            }
-            game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(af2Number1, af2Table2)
-        end
-    end
-    if bool == false then
-        loop = false
-    end
-end)
-Main:Toggle("Auto Mine Mag Totem (Put axe on slot 3)",false, function(bool)
-    if bool == true then
-        loop = true
-        local afNumber13 = 3
-        game:GetService("ReplicatedStorage").Events.EquipTool:FireServer(afNumber13)
-        game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-1172, 287, -1199))
-        while loop and wait(0.2) do
-            local af2Number1 = game:GetService("ReplicatedStorage").RelativeTime.Value
-            local af2Table2 = {
-                [1] = workspace.Resources["Totem of the Moon"].Wood,
-                [2] = workspace.Resources["Totem of the Moon"].Reference,
-                [3] = workspace.Resources["Totem of the Moon"].Wood,
-                [4] = workspace.Resources["Totem of the Moon"].Coloration,
-                [5] = workspace.Resources["Totem of the Moon"].Wood,
-                [6] = workspace.Resources["Totem of the Moon"].Coloration,
-                [7] = workspace.Resources["Totem of the Moon"].Wood
-            }
-            game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(af2Number1, af2Table2)
-        end
-    end
-    if bool == false then
-        loop = false
-    end
-end)
-game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(ohNumber1, ohTable2)
+
+
+
 Main:Button("Place Chest Campfire", function()
     local Fires = 1
     local Event = game:GetService("ReplicatedStorage").Events.PlaceStructure
@@ -244,8 +184,130 @@ Main:Textbox("Tp Spam", "Write victim name", true, function(t)
         end
     end
 end)
+Main:Button("Place Plant Box", function()
+    local ohCFrame2 = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+    local ohNumber3 = 0
 
+    game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Plant Box", ohCFrame2, ohNumber3)
+end)
 
+local abr = serv:Channel("Auto Break")
+abr:Toggle("Auto Mine Mag Ore (Put pick on slot 2)",false, function(bool)
+    if bool == true then
+        loop = true
+        local afNumber13 = 2
+        game:GetService("ReplicatedStorage").Events.EquipTool:FireServer(afNumber13)
+        game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-1172, 287, -1199))
+        while loop and wait(0.2) do
+            local af2Number1 = game:GetService("ReplicatedStorage").RelativeTime.Value
+            local af2Table2 = {
+                [1] = workspace.Resources["Magnetite Iceberg"]["Magnetite Ice"]
+            }
+            game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(af2Number1, af2Table2)
+        end
+    end
+    if bool == false then
+        loop = false
+    end
+end)
+abr:Toggle("Auto Mine Mag Totem (Put axe on slot 3)",false, function(bool)
+    if bool == true then
+        loop = true
+        local afNumber13 = 3
+        game:GetService("ReplicatedStorage").Events.EquipTool:FireServer(afNumber13)
+        game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-1172, 287, -1199))
+        while loop and wait(0.2) do
+            local af2Number1 = game:GetService("ReplicatedStorage").RelativeTime.Value
+            local af2Table2 = {
+                [1] = workspace.Resources["Totem of the Moon"].Wood,
+                [2] = workspace.Resources["Totem of the Moon"].Reference,
+                [3] = workspace.Resources["Totem of the Moon"].Wood,
+                [4] = workspace.Resources["Totem of the Moon"].Coloration,
+                [5] = workspace.Resources["Totem of the Moon"].Wood,
+                [6] = workspace.Resources["Totem of the Moon"].Coloration,
+                [7] = workspace.Resources["Totem of the Moon"].Wood
+            }
+            game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(af2Number1, af2Table2)
+        end
+    end
+    if bool == false then
+        loop = false
+    end
+end)
+abr:Toggle("Auto Break Ancient Tree (Put axe on slot 3)",false, function(bool)
+    if bool == true then
+        loop = true
+        local afNumber13 = 3
+        game:GetService("ReplicatedStorage").Events.EquipTool:FireServer(afNumber13)
+        game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-563, 311, -1188))
+        while loop and wait(0.2) do
+            local afNumber1 = game:GetService("ReplicatedStorage").RelativeTime.Value
+            local afTable2 = {
+                [1] = workspace["Spirit Lock"].Union,
+                [2] = workspace.Resources["Ancient Tree"].Trunk,
+                [3] = workspace.Resources["Ancient Tree"].Reference
+            }
+            game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(afNumber1, afTable2)
+        end
+    end
+    if bool == false then
+        loop = false
+    end
+end)
+abr:Toggle("Auto Break Wealthy God (Put pick on slot 2)",false, function(bool)
+    if bool == true then
+        loop = true
+        local afNumber13 = 2
+        game:GetService("ReplicatedStorage").Events.EquipTool:FireServer(afNumber13)
+        game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-220, -3, -264))
+        while loop and wait(0.2) do
+            local afNumber1 = game:GetService("ReplicatedStorage").RelativeTime.Value
+            local afTable2 = {
+                [1] = workspace.Resources["Wealthy God"].Moai
+            }
+            game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(afNumber1, afTable2)
+        end
+    end
+    if bool == false then
+        loop = false
+    end
+end)
+abr:Toggle("Auto Break Motherlode (Put pick on slot 2)",false, function(bool)
+    if bool == true then
+        loop = true
+        local afNumber13 = 2
+        game:GetService("ReplicatedStorage").Events.EquipTool:FireServer(afNumber13)
+        game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-121, -3, -173))
+        while loop and wait(0.2) do
+            local afNumber1 = game:GetService("ReplicatedStorage").RelativeTime.Value
+            local afTable2 = {
+                [1] = workspace.Resources["The Motherlode"]["Small Rock"]
+            }
+            game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(afNumber1, afTable2)
+        end
+    end
+    if bool == false then
+        loop = false
+    end
+end)
+abr:Toggle("Auto Break Dancing Shelly (Waste of time)",false, function(bool)
+    if bool == true then
+        loop = true
+        game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-884, -3, -1916))
+        while loop and wait(0.2) do
+            local afNumber1 = game:GetService("ReplicatedStorage").RelativeTime.Value
+            local afTable2 = {
+                [1] = workspace.Critters["Dancing Shelly"].Head,
+                [2] = workspace.Critters["Dancing Shelly"].Shell,
+                [3] = workspace.Critters["Dancing Shelly"].HitShell
+            }
+            game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(afNumber1, afTable2)
+        end
+    end
+    if bool == false then
+        loop = false
+    end
+end)
 
 
 local Crafting = serv:Channel("Crafting")
