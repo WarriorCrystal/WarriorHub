@@ -7,28 +7,29 @@ local serv = win:Server("Main", "")
 
 local Main = serv:Channel("Main")
 
-
+speed = 3
 Main:Button("Speed (Hold X)", function()
     local plr = game:GetService("Players").LocalPlayer
     local char = plr.Character
     local mouse = game:GetService("Players").LocalPlayer:GetMouse()
     local hum = char:FindFirstChild("HumanoidRootPart")
-    local speed = 3
     mouse.KeyDown:connect(function(key)
         if key == "x"  then
-            loop = true
-            while loop do
+            loop2 = true
+            while loop2 do
                 hum.CFrame = hum.CFrame + hum.CFrame.lookVector * speed
                 wait()
             end
         end
     end)
-
     mouse.KeyUp:connect(function(key)
-        if key == "x"  then
-            loop = false
+        if key == "x" then
+            loop2 = false
         end
     end)
+end)
+Main:Slider("Speed Multiplier", 0, 200, 3, function(t)
+    speed = t
 end)
 Main:Button("Infinity Jump", function()
     local Player = game:GetService'Players'.LocalPlayer;
@@ -69,6 +70,50 @@ Main:Button("Auto Break (Hold V)", function()
             breaking = false
         end
     end)
+end)
+apuitem = ""
+Main:Button("Auto Pick Up (Hold R)", function()
+    local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+    local picking=false
+    mouse.KeyDown:connect(function(key)
+        if key == "r" then
+            picking = true
+            while picking and wait(0.01) do
+                local asd = game.Workspace.Items[apuitem]
+                game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(asd)
+            end
+        end
+    end)
+    mouse.KeyUp:connect(function(key)
+        if key == "r" then
+            picking = false
+        end
+    end)
+end)
+Main:Textbox("Auto Pick Up Item", "Write item name", true, function(t)
+    apuitem = t
+end)
+aditem = ""
+Main:Button("Auto Drop (Hold F)", function()
+    local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+    local dropping=false
+    mouse.KeyDown:connect(function(key)
+        if key == "f" then
+            dropping = true
+            while dropping and wait(0.01) do
+                local asd = aditem
+                game:GetService("ReplicatedStorage").Events.DropBagItem:FireServer(asd)
+            end
+        end
+    end)
+    mouse.KeyUp:connect(function(key)
+        if key == "f" then
+            dropping = false
+        end
+    end)
+end)
+Main:Textbox("Auto Drop Item", "Write item name", true, function(t)
+    aditem = t
 end)
 Main:Button("Remove Rain", function()
     if workspace:FindFirstChild('RainPart') ~= nil then
@@ -211,6 +256,12 @@ Main:Textbox("Normal Tp", "Write victim name", true, function(t)
             end
         end
     end
+end)
+Main:Slider("Jump Power", 0, 300, 50, function(t)
+    game.Players.LocalPlayer.Character.Humanoid.JumpPower = t
+end)
+Main:Slider("Fov", 0, 100, 70, function(t)
+    game:GetService'Workspace'.Camera.FieldOfView = t
 end)
 local abr = serv:Channel("Auto Break")
 abr:Toggle("Auto Mine Mag Ore (Put pick on slot 2)",false, function(bool)
