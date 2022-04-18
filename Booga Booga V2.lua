@@ -260,7 +260,7 @@ end)
 Main:Slider("Jump Power", 0, 300, 50, function(t)
     game.Players.LocalPlayer.Character.Humanoid.JumpPower = t
 end)
-Main:Slider("Fov", 0, 300, 70, function(t)
+Main:Slider("Fov", 0, 120, 70, function(t)
     game:GetService'Workspace'.Camera.FieldOfView = t
 end)
 local abr = serv:Channel("Auto Break")
