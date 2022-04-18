@@ -6,9 +6,112 @@ local serv = win:Server("Main", "")
 
 
 local Main = serv:Channel("Main")
-
+Main:Label("Welcome to WarriorHub")
+Main:Label("Credits: Discord UI dev, Onyx Hub, Booga Bitches, and me lol")
+local com = serv:Channel("Combat")
+com:Button("Kill Aura (Hold R)", function()
+    local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+    local killing=false
+    local plrs = game:GetService"Players"
+    mouse.KeyDown:connect(function(key)
+        if key == "r" then
+            killing = true
+            while killing and wait(0.01) do
+                for _,v in pairs(plrs:GetPlayers()) do
+                    local distance = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).Magnitude
+                    if v ~= plrs.LocalPlayer and distance <= 35 then
+                        local ohNumber1 = game:GetService("ReplicatedStorage").RelativeTime.Value
+                        local ohTable2 = {
+                            [1] = workspace.Characters[v.Name].LeftUpperLeg,
+                            [2] = workspace.Characters[v.Name].HumanoidRootPart,
+                            [3] = workspace.Characters[v.Name].LeftLowerArm,
+                            [4] = workspace.Characters[v.Name].LowerTorso,
+                            [5] = workspace.Characters[v.Name].LeftFoot,
+                            [6] = workspace.Characters[v.Name].LeftHand,
+                            [7] = workspace.Characters[v.Name].LeftLowerLeg,
+                            [8] = workspace.Characters[v.Name].UpperTorso,
+                            [9] = workspace.Characters[v.Name].Head,
+                            [10] = workspace.Characters[v.Name].LeftUpperArm
+                        }
+                        game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(ohNumber1, ohTable2)
+                    end
+                end
+            end
+        end
+    end)
+    mouse.KeyUp:connect(function(key)
+        if key == "r" then
+            killing = false
+        end
+    end)
+end)
+com:Button("Auto Wall Trap (4 Stone Walls)", function()
+    local Event = game:GetService("ReplicatedStorage").Events.PlaceStructure
+    h = game.Players.LocalPlayer.Character.LowerTorso.Position
+    local aa = h.x + 13
+    local bb = h.y - 2
+    local cc = h.z
+    local aaa = h.x - 13
+    local bbb = h.y - 2
+    local ccc = h.z
+    local aaaa = h.x
+    local bbbb = h.y - 2
+    local cccc = h.z + 13
+    local aaaaa = h.x
+    local bbbbb = h.y - 2
+    local ccccc = h.z - 13
+    local k_1 = "Stone Wall"
+    local k_2 = CFrame.new(aaaa, bbbb, cccc, -0.99862951, 9.53660761e-12, 0.0523360483, -9.54969524e-12, 1, 2.71050543e-20, -0.0523360483, 4.99793241e-13, -0.99862951)
+    local k_3 = 177
+    local Event = game:GetService("ReplicatedStorage").Events.PlaceStructure
+    Event:FireServer(k_1, k_2, k_3)
+    local l_1 = "Stone Wall"
+    local l_2 = CFrame.new(aaaaa, bbbbb, ccccc, -0.99862951, 9.53660761e-12, 0.0523360483, -9.54969524e-12, 1, 2.71050543e-20, -0.0523360483, 4.99793241e-13, -0.99862951)
+    local l_3 = 177
+    local Event = game:GetService("ReplicatedStorage").Events.PlaceStructure
+    Event:FireServer(l_1, l_2, l_3)
+    local m_1 = "Stone Wall"
+    local m_2 = CFrame.new(aaa, bbb, ccc, 1.19248806e-08, 3.87430191e-06, -1, 4.62005888e-14, 1, -3.87430191e-06, 1, 0, 1.19248806e-08)
+    local m_3 = 270
+    local Event = game:GetService("ReplicatedStorage").Events.PlaceStructure
+    Event:FireServer(m_1, m_2, m_3)
+    local n_1 = "Stone Wall"
+    local n_2 = CFrame.new(aa, bb, cc, 1.19248806e-08, 3.87430191e-06, -1, 4.62005888e-14, 1, -3.87430191e-06, 1, 0, 1.19248806e-08)
+    local n_3 = 270
+    local Event = game:GetService("ReplicatedStorage").Events.PlaceStructure
+    Event:FireServer(n_1, n_2, n_3)
+end)
+com:Textbox("Tp Spam", "Write victim name", true, function(t)
+    for i,v in pairs(game:GetService("Players"):GetChildren()) do
+        if v.Name:lower():find(t:lower()) then
+            if v.Name == "valensoysantijajaja" then
+                DiscordLib:Notification("Notification", "Lmao you can't kill based people", "Sorry")
+            else
+                repeat
+                    player = game.Players.LocalPlayer.Character
+                    player.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
+                    wait(.001)
+                until v.Character.Humanoid.Health <= 0
+            end
+        end
+    end
+end)
+com:Textbox("Normal Tp", "Write victim name", true, function(t)
+    for i,v in pairs(game:GetService("Players"):GetChildren()) do
+        if v.Name:lower():find(t:lower()) then
+            if v.Name == "valensoysantijajaja" then
+                DiscordLib:Notification("Notification", "Lmao you can't kill based people", "Sorry")
+            else
+                player = game.Players.LocalPlayer.Character
+                player.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
+                wait(.001)
+            end
+        end
+    end
+end)
+local move = serv:Channel("Movement")
 speed = 3
-Main:Button("Speed (Hold X)", function()
+move:Button("Speed (Hold X)", function()
     local plr = game:GetService("Players").LocalPlayer
     local char = plr.Character
     local mouse = game:GetService("Players").LocalPlayer:GetMouse()
@@ -28,10 +131,10 @@ Main:Button("Speed (Hold X)", function()
         end
     end)
 end)
-Main:Slider("Speed Multiplier", 0, 200, 3, function(t)
+move:Slider("Speed Multiplier", 0, 200, 3, function(t)
     speed = t
 end)
-Main:Button("Infinity Jump", function()
+move:Button("Infinity Jump", function()
     local Player = game:GetService'Players'.LocalPlayer;
     local UIS = game:GetService'UserInputService';
 
@@ -51,80 +154,11 @@ Main:Button("Infinity Jump", function()
         end
     end)
 end)
-Main:Button("Auto Break (Hold V)", function()
-    local mouse = game:GetService("Players").LocalPlayer:GetMouse()
-    local breaking=false
-    mouse.KeyDown:connect(function(key)
-        if key == "v" then
-            breaking = true
-            while breaking and wait(0.01) do
-                local part = game:GetService("Players").LocalPlayer:GetMouse().Target
-                local one = game:GetService("ReplicatedStorage").RelativeTime.Value
-                local two = {part,part,part,part}
-                game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(one, two)
-            end
-        end
-    end)
-    mouse.KeyUp:connect(function(key)
-        if key == "v" then
-            breaking = false
-        end
-    end)
+move:Slider("Jump Power", 0, 300, 50, function(t)
+    game.Players.LocalPlayer.Character.Humanoid.JumpPower = t
 end)
-apuitem = ""
-Main:Button("Auto Pick Up (Hold R)", function()
-    local mouse = game:GetService("Players").LocalPlayer:GetMouse()
-    local picking=false
-    mouse.KeyDown:connect(function(key)
-        if key == "r" then
-            picking = true
-            while picking and wait(0.01) do
-                local asd = game.Workspace.Items[apuitem]
-                game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(asd)
-            end
-        end
-    end)
-    mouse.KeyUp:connect(function(key)
-        if key == "r" then
-            picking = false
-        end
-    end)
-end)
-Main:Textbox("Auto Pick Up Item", "Write item name", true, function(t)
-    apuitem = t
-end)
-aditem = ""
-Main:Button("Auto Drop (Hold F)", function()
-    local mouse = game:GetService("Players").LocalPlayer:GetMouse()
-    local dropping=false
-    mouse.KeyDown:connect(function(key)
-        if key == "f" then
-            dropping = true
-            while dropping and wait(0.01) do
-                local asd = aditem
-                game:GetService("ReplicatedStorage").Events.DropBagItem:FireServer(asd)
-            end
-        end
-    end)
-    mouse.KeyUp:connect(function(key)
-        if key == "f" then
-            dropping = false
-        end
-    end)
-end)
-Main:Textbox("Auto Drop Item", "Write item name", true, function(t)
-    aditem = t
-end)
-Main:Button("Remove Rain", function()
-    if workspace:FindFirstChild('RainPart') ~= nil then
-        workspace.RainPart:Destroy()
-        game.ReplicatedStorage.Sounds.Nature.Rain:Stop()
-        game.ReplicatedStorage.Sounds.Nature.Thunder:Stop()
-        game.Lighting.Rain:Destroy()
-        game.ReplicatedStorage.Skies.Shine:Clone().Parent = game.Lighting
-    end
-end)
-Main:Button("Place Chest Campfire (1 Chest, 4 Campfires)", function()
+local build = serv:Channel("Building")
+build:Button("Place Chest Campfire (1 Chest, 4 Campfires)", function()
     local Fires = 1
     local Event = game:GetService("ReplicatedStorage").Events.PlaceStructure
     h = game.Players.LocalPlayer.Character.LowerTorso.Position
@@ -174,49 +208,13 @@ Main:Button("Place Chest Campfire (1 Chest, 4 Campfires)", function()
         Event:FireServer(E_1, E_2, E_3)
     end
 end)
-Main:Button("Auto Wall Trap (4 Stone Walls)", function()
-    local Event = game:GetService("ReplicatedStorage").Events.PlaceStructure
-    h = game.Players.LocalPlayer.Character.LowerTorso.Position
-    local aa = h.x + 13
-    local bb = h.y - 2
-    local cc = h.z
-    local aaa = h.x - 13
-    local bbb = h.y - 2
-    local ccc = h.z
-    local aaaa = h.x
-    local bbbb = h.y - 2
-    local cccc = h.z + 13
-    local aaaaa = h.x
-    local bbbbb = h.y - 2
-    local ccccc = h.z - 13
-    local k_1 = "Stone Wall"
-    local k_2 = CFrame.new(aaaa, bbbb, cccc, -0.99862951, 9.53660761e-12, 0.0523360483, -9.54969524e-12, 1, 2.71050543e-20, -0.0523360483, 4.99793241e-13, -0.99862951)
-    local k_3 = 177
-    local Event = game:GetService("ReplicatedStorage").Events.PlaceStructure
-    Event:FireServer(k_1, k_2, k_3)
-    local l_1 = "Stone Wall"
-    local l_2 = CFrame.new(aaaaa, bbbbb, ccccc, -0.99862951, 9.53660761e-12, 0.0523360483, -9.54969524e-12, 1, 2.71050543e-20, -0.0523360483, 4.99793241e-13, -0.99862951)
-    local l_3 = 177
-    local Event = game:GetService("ReplicatedStorage").Events.PlaceStructure
-    Event:FireServer(l_1, l_2, l_3)
-    local m_1 = "Stone Wall"
-    local m_2 = CFrame.new(aaa, bbb, ccc, 1.19248806e-08, 3.87430191e-06, -1, 4.62005888e-14, 1, -3.87430191e-06, 1, 0, 1.19248806e-08)
-    local m_3 = 270
-    local Event = game:GetService("ReplicatedStorage").Events.PlaceStructure
-    Event:FireServer(m_1, m_2, m_3)
-    local n_1 = "Stone Wall"
-    local n_2 = CFrame.new(aa, bb, cc, 1.19248806e-08, 3.87430191e-06, -1, 4.62005888e-14, 1, -3.87430191e-06, 1, 0, 1.19248806e-08)
-    local n_3 = 270
-    local Event = game:GetService("ReplicatedStorage").Events.PlaceStructure
-    Event:FireServer(n_1, n_2, n_3)
-end)
-Main:Button("Place Plant Box", function()
+build:Button("Place Plant Box", function()
     local ohCFrame2 = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
     local ohNumber3 = 0
 
     game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Plant Box", ohCFrame2, ohNumber3)
 end)
-Main:Button("Egg Farm (4 Nests, 2 Campfires)", function()
+build:Button("Egg Farm (4 Nests, 2 Campfires)", function()
     local ohCFrame2 = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
     local ohNumber3 = 0
     local ohCFrame3 = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x + 2, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
@@ -229,39 +227,113 @@ Main:Button("Egg Farm (4 Nests, 2 Campfires)", function()
     game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Campfire", ohCFrame2, ohNumber3)
     game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Campfire", ohCFrame3, ohNumber3)
 end)
-Main:Textbox("Tp Spam", "Write victim name", true, function(t)
-    for i,v in pairs(game:GetService("Players"):GetChildren()) do
-        if v.Name:lower():find(t:lower()) then
-            if v.Name == "valensoysantijajaja" then
-                DiscordLib:Notification("Notification", "Lmao you can't kill based people", "Sorry")
-            else
-                repeat
-                    player = game.Players.LocalPlayer.Character
-                    player.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
-                    wait(.001)
-                until v.Character.Humanoid.Health <= 0
-                end
-        end
-    end
-end)
-Main:Textbox("Normal Tp", "Write victim name", true, function(t)
-    for i,v in pairs(game:GetService("Players"):GetChildren()) do
-        if v.Name:lower():find(t:lower()) then
-            if v.Name == "valensoysantijajaja" then
-                DiscordLib:Notification("Notification", "Lmao you can't kill based people", "Sorry")
-            else
-                player = game.Players.LocalPlayer.Character
-                    player.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
-                    wait(.001)
+local misc = serv:Channel("Misc")
+misc:Button("Auto Break (Hold V)", function()
+    local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+    local breaking=false
+    mouse.KeyDown:connect(function(key)
+        if key == "v" then
+            breaking = true
+            while breaking and wait(0.01) do
+                local part = game:GetService("Players").LocalPlayer:GetMouse().Target
+                local one = game:GetService("ReplicatedStorage").RelativeTime.Value
+                local two = {part,part,part,part}
+                game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(one, two)
             end
         end
+    end)
+    mouse.KeyUp:connect(function(key)
+        if key == "v" then
+            breaking = false
+        end
+    end)
+end)
+apuitem = ""
+misc:Button("Auto Pick Up (Hold B)", function()
+    local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+    local picking=false
+    mouse.KeyDown:connect(function(key)
+        if key == "b" then
+            picking = true
+            while picking and wait(0.01) do
+                local asd = game.Workspace.Items[apuitem]
+                game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(asd)
+            end
+        end
+    end)
+    mouse.KeyUp:connect(function(key)
+        if key == "b" then
+            picking = false
+        end
+    end)
+end)
+misc:Textbox("Auto Pick Up Item", "Write item name", true, function(t)
+    apuitem = t
+end)
+aditem = ""
+misc:Button("Auto Drop (Hold F)", function()
+    local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+    local dropping=false
+    mouse.KeyDown:connect(function(key)
+        if key == "f" then
+            dropping = true
+            while dropping and wait(0.01) do
+                local asd = aditem
+                game:GetService("ReplicatedStorage").Events.DropBagItem:FireServer(asd)
+            end
+        end
+    end)
+    mouse.KeyUp:connect(function(key)
+        if key == "f" then
+            dropping = false
+        end
+    end)
+end)
+misc:Textbox("Auto Drop Item", "Write item name", true, function(t)
+    aditem = t
+end)
+misc:Toggle("Color Changing Skin (Laggy on very bad pcs)",false, function(bool)
+    if bool == true then
+        loop = true
+        while loop and wait(0.3) do
+            wait(0.15) do
+            local ohString1 = "skin"
+            local ohString2 = "Dark Brown"
+            game:GetService("ReplicatedStorage").Events.CosmeticChange:FireServer(ohString1, ohString2)
+        end
+            wait(0.15) do
+            local ohString3 = "skin"
+            local ohString4 = "Tan"
+            game:GetService("ReplicatedStorage").Events.CosmeticChange:FireServer(ohString3, ohString4)
+        end
+            wait(0.15) do
+            local ohString5 = "skin"
+            local ohString6 = "White"
+            game:GetService("ReplicatedStorage").Events.CosmeticChange:FireServer(ohString5, ohString6)
+        end
+            wait(0.15) do
+            local ohString7 = "skin"
+            local ohString8 = "Pale"
+            game:GetService("ReplicatedStorage").Events.CosmeticChange:FireServer(ohString7, ohString8)
+        end
+        end
+    end
+    if bool == false then
+        loop = false
     end
 end)
-Main:Slider("Jump Power", 0, 300, 50, function(t)
-    game.Players.LocalPlayer.Character.Humanoid.JumpPower = t
-end)
-Main:Slider("Fov", 0, 120, 70, function(t)
+local render = serv:Channel("Render")
+render:Slider("Fov", 0, 120, 70, function(t)
     game:GetService'Workspace'.Camera.FieldOfView = t
+end)
+render:Button("Remove Rain", function()
+    if workspace:FindFirstChild('RainPart') ~= nil then
+        workspace.RainPart:Destroy()
+        game.ReplicatedStorage.Sounds.Nature.Rain:Stop()
+        game.ReplicatedStorage.Sounds.Nature.Thunder:Stop()
+        game.Lighting.Rain:Destroy()
+        game.ReplicatedStorage.Skies.Shine:Clone().Parent = game.Lighting
+    end
 end)
 local abr = serv:Channel("Auto Break")
 abr:Toggle("Auto Mine Mag Ore (Put pick on slot 2)",false, function(bool)
@@ -397,7 +469,14 @@ Crafting:Button("Craft Lvl 1000 Golden Boat (you have to be on water)", function
 
     game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Golden Sailboat", ohCFrame2, ohNumber3)
 end)
-
+Crafting:Button("Craft Mag Set", function()
+    game:GetService("ReplicatedStorage").Events.CraftItem:FireServer("Magnetite Mask")
+    game:GetService("ReplicatedStorage").Events.CraftItem:FireServer("Magnetite Chestplate")
+    game:GetService("ReplicatedStorage").Events.CraftItem:FireServer("Magnetite Greaves")
+    game:GetService("ReplicatedStorage").Events.CraftItem:FireServer("Magnetite Stick")
+    game:GetService("ReplicatedStorage").Events.CraftItem:FireServer("Magnetite Pick")
+    game:GetService("ReplicatedStorage").Events.CraftItem:FireServer("Magnetite Axe")
+end)
 
 local Others = serv:Channel("Others")
 
@@ -416,39 +495,9 @@ Others:Button("Server Hop", function()
         end
     end
 end)
-Others:Toggle("Color Changing Skin (Laggy on very bad pcs)",false, function(bool)
-    if bool == true then
-        loop = true
-        while loop and wait(0.3) do
-            wait(0.15) do
-            local ohString1 = "skin"
-            local ohString2 = "Dark Brown"
-            game:GetService("ReplicatedStorage").Events.CosmeticChange:FireServer(ohString1, ohString2)
-        end
-            wait(0.15) do
-            local ohString3 = "skin"
-            local ohString4 = "Tan"
-            game:GetService("ReplicatedStorage").Events.CosmeticChange:FireServer(ohString3, ohString4)
-        end
-            wait(0.15) do
-            local ohString5 = "skin"
-            local ohString6 = "White"
-            game:GetService("ReplicatedStorage").Events.CosmeticChange:FireServer(ohString5, ohString6)
-        end
-            wait(0.15) do
-            local ohString7 = "skin"
-            local ohString8 = "Pale"
-            game:GetService("ReplicatedStorage").Events.CosmeticChange:FireServer(ohString7, ohString8)
-        end
-    end
-    end
-    if bool == false then
-        loop = false
-    end
-end)
 
-
-local STPS = serv:Channel("Mob & Item Teleports")
+local teleports = win:Server("Teleports", "")
+local STPS = teleports:Channel("Mob & Item Teleports")
 
 
 STPS:Button("Random Giant Shelly", function()
@@ -473,7 +522,7 @@ STPS:Button("Random Essence", function()
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Items["Essence"].Item.CFrame
 end)
 
-local SDTPS = serv:Channel("Meteor & Building TPS")
+local SDTPS = teleports:Channel("Meteor & Building TPS")
 SDTPS:Button("Magnetite Meteor", function()
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Resources["Meteor Core"]["Small Rock"].CFrame
 end)
@@ -513,7 +562,7 @@ end)
 SDTPS:Button("Random Squad Raft", function()
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Deployables["Squad Raft"].MainPart.CFrame
 end)
-local PTPS = serv:Channel("Place Teleports")
+local PTPS = teleports:Channel("Place Teleports")
 
 
 PTPS:Button("First Floating Island", function()
@@ -539,7 +588,7 @@ PTPS:Button("Adurite Cave", function()
 end)
 
 
-local XPTPS = serv:Channel("XP Teleports")
+local XPTPS = teleports:Channel("XP Teleports")
 
 
 XPTPS:Button("Ancient Tree (Best)", function()
