@@ -19,7 +19,7 @@ com:Button("Kill Aura (Hold R)", function()
             while killing and wait(0.01) do
                 for _,v in pairs(plrs:GetPlayers()) do
                     local distance = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).Magnitude
-                    if v ~= plrs.LocalPlayer and distance <= 35 then
+                    if v ~= plrs.LocalPlayer and v ~= "valensoysantijajaja" and distance <= 12 then
                         local ohNumber1 = game:GetService("ReplicatedStorage").RelativeTime.Value
                         local ohTable2 = {
                             [1] = workspace.Characters[v.Name].LeftUpperLeg,
@@ -81,20 +81,31 @@ com:Button("Auto Wall Trap (4 Stone Walls)", function()
     local Event = game:GetService("ReplicatedStorage").Events.PlaceStructure
     Event:FireServer(n_1, n_2, n_3)
 end)
-com:Textbox("Tp Spam", "Write victim name", true, function(t)
-    for i,v in pairs(game:GetService("Players"):GetChildren()) do
-        if v.Name:lower():find(t:lower()) then
-            if v.Name == "valensoysantijajaja" then
-                DiscordLib:Notification("Notification", "Lmao you can't kill based people", "Sorry")
-            else
-                repeat
-                    player = game.Players.LocalPlayer.Character
-                    player.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
-                    wait(.001)
-                until v.Character.Humanoid.Health <= 0
+tpspamv = "sgsfghggdhdghdhdsfhghbgdhdgf"
+tpupval = 0
+com:Toggle("Teleport Spam",false, function(bool)
+    tping = false
+    if bool == true then
+        tping = true
+        while tping and wait(0.0001) do
+            for i,v in pairs(game:GetService("Players"):GetChildren()) do
+                if v.Name:lower():find(tpspamv:lower()) then
+                    if v.Name == "valensoysantijajaja" then
+                        return
+                    else
+                        player = game.Players.LocalPlayer.Character
+                        player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y + tpupval, v.Character.HumanoidRootPart.Position.z)
+                    end
+                end
             end
         end
     end
+end)
+com:Slider("TP Spam y distance from enemy (use a fly script for down)", -10, 10, 0, function(t)
+    tpupval = t
+end)
+com:Textbox("TP Spam Name", "Write victim name", true, function(t)
+   tpspamv = t
 end)
 com:Textbox("Normal Tp", "Write victim name", true, function(t)
     for i,v in pairs(game:GetService("Players"):GetChildren()) do
@@ -251,14 +262,19 @@ end)
 apuitem = ""
 misc:Button("Auto Pick Up (Hold B)", function()
     local mouse = game:GetService("Players").LocalPlayer:GetMouse()
-    local picking=false
+    local picking = false
     mouse.KeyDown:connect(function(key)
         if key == "b" then
             picking = true
             while picking and wait(0.01) do
-                local asd = game.Workspace.Items[apuitem]
-                game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(asd)
-            end
+                    local asd = game.Workspace.Items:FindFirstChild(apuitem)
+                    local distance = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - asd.Item.Position).Magnitude
+                    if distance <= 40 then
+                        game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(asd)
+                    elseif distance >= 40 then
+                        return
+                    end
+                end
         end
     end)
     mouse.KeyUp:connect(function(key)
@@ -269,6 +285,29 @@ misc:Button("Auto Pick Up (Hold B)", function()
 end)
 misc:Textbox("Auto Pick Up Item", "Write item name", true, function(t)
     apuitem = t
+end)
+apuitem2 = ""
+misc:Button("Auto TP Pick Up (Hold K)", function()
+    local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+    local picking = false
+    mouse.KeyDown:connect(function(key)
+        if key == "k" then
+            picking = true
+            while picking and wait(0.01) do
+                local asd = game.Workspace.Items[apuitem2]
+                game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(asd)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = asd.Item.CFrame
+            end
+        end
+    end)
+    mouse.KeyUp:connect(function(key)
+        if key == "k" then
+            picking = false
+        end
+    end)
+end)
+misc:Textbox("Auto TP Pick Up Item", "Write item name", true, function(t)
+    apuitem2 = t
 end)
 aditem = ""
 misc:Button("Auto Drop (Hold F)", function()
@@ -335,7 +374,103 @@ render:Button("Remove Rain", function()
         game.ReplicatedStorage.Skies.Shine:Clone().Parent = game.Lighting
     end
 end)
-local abr = serv:Channel("Auto Break")
+local abr = serv:Channel("Auto Farm")
+local function farmPeepers()
+    if game.Workspace.Items["Peeper Popsicle"] ~= nil then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Items["Peeper Popsicle"].Wing.CFrame
+        game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(game.Workspace.Items["Peeper Popsicle"])
+    end
+    if game.Workspace.Items["Peeper Popsicle"] == nil then
+        return
+    end
+end
+abr:Toggle("Auto Farm Peeper Popsicles",false, function(bool)
+    if bool == true then
+        loop = true
+        while loop and wait(0.01) do
+            farmPeepers()
+        end
+    end
+    if bool == false then
+        loop = false
+    end
+end)
+abr:Toggle("Auto Mine all Coal (Put pick on slot 2)",false, function(bool)
+    if bool == true then
+        loop = true
+        local afNumber13 = 2
+        game:GetService("ReplicatedStorage").Events.EquipTool:FireServer(afNumber13)
+        game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-1172, 287, -1199))
+        while loop and wait(0.01) do
+            local af2Number1 = game:GetService("ReplicatedStorage").RelativeTime.Value
+            local af2Table2 = {
+                [1] = workspace.Resources["Coal Node"].Reference
+            }
+            game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(af2Number1, af2Table2)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Resources["Coal Node"].Reference.CFrame
+        end
+    end
+    if bool == false then
+        loop = false
+    end
+end)
+abr:Toggle("Auto Mine all Iron (Put pick on slot 2)",false, function(bool)
+    if bool == true then
+        loop = true
+        local afNumber13 = 2
+        game:GetService("ReplicatedStorage").Events.EquipTool:FireServer(afNumber13)
+        game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-1172, 287, -1199))
+        while loop and wait(0.01) do
+            local af2Number1 = game:GetService("ReplicatedStorage").RelativeTime.Value
+            local af2Table2 = {
+                [1] = workspace.Resources["Iron Node"].Reference
+            }
+            game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(af2Number1, af2Table2)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Resources["Iron Node"].Reference.CFrame
+        end
+    end
+    if bool == false then
+        loop = false
+    end
+end)
+abr:Toggle("Auto Mine all Gold (Put pick on slot 2)",false, function(bool)
+    if bool == true then
+        loop = true
+        local afNumber13 = 2
+        game:GetService("ReplicatedStorage").Events.EquipTool:FireServer(afNumber13)
+        game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-1172, 287, -1199))
+        while loop and wait(0.01) do
+            local af2Number1 = game:GetService("ReplicatedStorage").RelativeTime.Value
+            local af2Table2 = {
+                [1] = workspace.Resources["Gold Node"].Reference
+            }
+            game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(af2Number1, af2Table2)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Resources["Gold Node"].Reference.CFrame
+        end
+    end
+    if bool == false then
+        loop = false
+    end
+end)
+abr:Toggle("Auto Chop all Dead Trees (Put pick on slot 3)",false, function(bool)
+    if bool == true then
+        loop = true
+        local afNumber13 = 3
+        game:GetService("ReplicatedStorage").Events.EquipTool:FireServer(afNumber13)
+        game.Players.LocalPlayer.Character:MoveTo(Vector3.new(-1172, 287, -1199))
+        while loop and wait(0.01) do
+            local af2Number1 = game:GetService("ReplicatedStorage").RelativeTime.Value
+            local af2Table2 = {
+                [1] = workspace.Resources["Dead Tree"].Reference
+            }
+            game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(af2Number1, af2Table2)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Resources["Dead Tree"].Reference.CFrame
+        end
+    end
+    if bool == false then
+        loop = false
+    end
+end)
 abr:Toggle("Auto Mine Mag Ore (Put pick on slot 2)",false, function(bool)
     if bool == true then
         loop = true
