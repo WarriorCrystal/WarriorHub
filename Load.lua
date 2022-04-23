@@ -2,7 +2,7 @@ if game.PlaceId == 662417684 then
 loadstring(game:HttpGet("https://raw.githubusercontent.com/WarriorCrystal/WarriorHub/main/Lucky%20Block%20Battlegrounds.lua"))()
 end
 if game.PlaceId == 4787629450 then
-loadstring(game:HttpGet("https://raw.githubusercontent.com/WarriorCrystal/WarriorHub/main/Booga%20Booga%20V2.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/WarriorCrystal/WarriorHub/main/Booga%20Booga%20V3.lua"))()
 end
 
 
