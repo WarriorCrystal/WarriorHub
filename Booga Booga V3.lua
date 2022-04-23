@@ -464,25 +464,51 @@ end)
 
 local AutoFarm = s:Tab("Auto Farm")
 AutoFarm:Label("You have to collect manually")
-AutoFarm:Label("You should use auto tp pick up for collecting")
+AutoFarm:Label("You should use auto pick up for collecting")
 AutoFarm:Label("Equip a pick or an axe depending on what you select")
 FarmingObject = nil
+TimeBetweenEach = 1
+farmingMineTarget = nil
 AutoFarm:Toggle("Auto Farm",function(t)
     if t == true then
         farming = true
-        while farming and wait(0.01) do
-            local af2Number1 = game:GetService("ReplicatedStorage").RelativeTime.Value
-            local af2Table2 = {
-                [1] = workspace.Resources[FarmingObject].Reference
-            }
-            game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(af2Number1, af2Table2)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Resources[FarmingObject].Reference.CFrame
+        autoFarmTping = true
+        local shelly = "Stone Shelly"
+        spawn(function()
+            while farming do
+                local af2Table2 = {
+                    [1] = farmingMineTarget
+                }
+                local af2Number1 = game:GetService("ReplicatedStorage").RelativeTime.Value
+                if FarmingObject == "Shelly" then
+                    farmingMineTarget = game.Workspace.Critters[shelly].Head
+                else
+                    farmingMineTarget = game.Workspace.Resources[FarmingObject].Reference
+                end
+
+                game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(af2Number1, af2Table2)
+                wait()
+            end
+        end)
+        spawn(function()
+        while autoFarmTping and wait(TimeBetweenEach) do
+            if FarmingObject == "Shelly" then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Critters[shelly].Head.CFrame
+            else
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Resources[FarmingObject].Reference.CFrame
+            end
+            wait(TimeBetweenEach)
         end
+        end)
     end
     if t == false then
         farming = false
+        autoFarmTping = false
     end
 end)
-AutoFarm:Dropdown("Auto Farm Target",{"Iron Node", "Coal Node", "Magnetite Iceberg", "Totem of the Moon", "Dead Tree", "Gold Node", "Stone Node", "Ancient Tree", "Ancient Feather Tree"},function(t)
+AutoFarm:Dropdown("Target",{"Iron Node", "Coal Node", "Magnetite Iceberg", "Totem of the Moon", "Dead Tree", "Gold Node", "Stone Node", "Ancient Tree", "Ancient Feather Tree", "Shelly"},function(t)
     FarmingObject = t
+end)
+AutoFarm:Slider("Wait Time",0.1,15,1,function(t)
+    TimeBetweenEach = t
 end)
