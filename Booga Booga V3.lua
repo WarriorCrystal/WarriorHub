@@ -158,81 +158,6 @@ Movement:Slider("Jump Power", 0,300,50, function(t)
 end)
 
 
---Building
-
-
-local Building = s:Tab("Building")
-Building:Button("Place Chest Campfire (1 Chest, 4 Campfires)", function()
-    local Fires = 1
-    local Event = game:GetService("ReplicatedStorage").Events.PlaceStructure
-    h = game.Players.LocalPlayer.Character.LowerTorso.Position
-    local c = h.x + 5
-    local d = h.y - 2
-    local e = h.z
-    local j = h.x
-    local k = h.y - 2
-    local l = h.z
-    local aa = h.x - 5
-    local bb = h.y - 2
-    local cc = h.z
-    local aaa = h.x
-    local bbb = h.y - 2
-    local ccc = h.z + 5
-    local aaaa = h.x
-    local bbbb = h.y - 2
-    local cccc = h.z - 5
-    for i = 1,1 do
-        local C_1 = "Chest"
-        local C_2 = CFrame.new(j, k, l, 1, 0, 0, 0, 1, -5.56028681e-08, 0, -5.56028681e-08, 1)
-        local C_3 = 0
-        Event:FireServer(C_1, C_2, C_3)
-    end
-    for i = 1,Fires do
-        local A_1 = "Campfire"
-        local A_2 = CFrame.new(c, d, e, 1, 0, 0, 0, 1, -5.56028681e-08, 0, -5.56028681e-08, 1)
-        local A_3 = 0
-        Event:FireServer(A_1, A_2, A_3)
-    end
-    for i = 1,Fires do
-        local B_1 = "Campfire"
-        local B_2 = CFrame.new(aa, bb, cc, 1, 0, 0, 0, 1, -5.56028681e-08, 0, -5.56028681e-08, 1)
-        local B_3 = 0
-        Event:FireServer(B_1, B_2, B_3)
-    end
-    for i = 1,Fires do
-        local D_1 = "Campfire"
-        local D_2 = CFrame.new(aaa, bbb, ccc, 1, 0, 0, 0, 1, -5.56028681e-08, 0, -5.56028681e-08, 1)
-        local D_3 = 0
-        Event:FireServer(D_1, D_2, D_3)
-    end
-    for i = 1,Fires do
-        local E_1 = "Campfire"
-        local E_2 = CFrame.new(aaaa, bbbb, cccc, 1, 0, 0, 0, 1, -5.56028681e-08, 0, -5.56028681e-08, 1)
-        local E_3 = 0
-        Event:FireServer(E_1, E_2, E_3)
-    end
-end)
-Building:Button("Place Plant Box", function()
-    local ohCFrame2 = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
-    local ohNumber3 = 0
-
-    game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Plant Box", ohCFrame2, ohNumber3)
-end)
-Building:Button("Egg Farm (4 Nests, 2 Campfires)", function()
-    local ohCFrame2 = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
-    local ohNumber3 = 0
-    local ohCFrame3 = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x + 2, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
-
-
-    game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Nest", ohCFrame2, ohNumber3)
-    game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Nest", ohCFrame2, ohNumber3)
-    game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Nest", ohCFrame2, ohNumber3)
-    game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Nest", ohCFrame2, ohNumber3)
-    game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Campfire", ohCFrame2, ohNumber3)
-    game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Campfire", ohCFrame3, ohNumber3)
-end)
-
-
 --Misc
 
 
@@ -261,62 +186,36 @@ end)
 Misc:Textbox("Auto Break Key", true,function(t)
     abKey = t:lower()
 end)
-apuItem = nil
-apuKey = "b"
-Misc:Button("Auto Pick Up (Hold)", function()
-    local mouse = game:GetService("Players").LocalPlayer:GetMouse()
-    local picking = false
-    mouse.KeyDown:connect(function(key)
-        if key == apuKey then
-            picking = true
-            while picking and wait() do
-                local asd = game.Workspace.Items:FindFirstChild(apuItem)
-                local distance = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - asd.Item.Position).Magnitude
-                if distance <= 20 then
-                    game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(asd)
-                elseif distance >= 20 then
-                    return
+Misc:Toggle("Auto Pick Up",function(t)
+    if t == true then
+        autoPickUpPicking = true
+        while autoPickUpPicking == true and wait() do
+            for _, v in pairs(workspace.Items:GetChildren()) do
+                if v ~= nil and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 20 then
+                    game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
                 end
             end
         end
-    end)
-    mouse.KeyUp:connect(function(key)
-        if key == apuKey then
-            picking = false
-        end
-    end)
-end)
-Misc:Textbox("Auto Pick Up Item", true, function(t)
-    apuItem = t
-end)
-Misc:Textbox("Auto Pick Up Key", true, function(t)
-    apuKey = t
+    end
+    if t == false then
+        autoPickUpPicking = false
+    end
 end)
 apuitem2 = nil
-apuKey2 = "k"
-Misc:Button("Auto TP Pick Up (Hold)", function()
-    local mouse = game:GetService("Players").LocalPlayer:GetMouse()
-    local picking = false
-    mouse.KeyDown:connect(function(key)
-        if key == apuKey2 then
-            picking = true
-            while picking and wait() do
-                local asd = game.Workspace.Items[apuitem2]
-                game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(asd)
-                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = asd.Item.CFrame
-            end
+Misc:Toggle("Auto TP Pick Up",function(t)
+    if t == true then
+        autoTPPickUp = true
+        while autoTPPickUp == true and wait() do
+            local asd = game.Workspace.Items[apuitem2]
+            game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(asd)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = asd.Item.CFrame
         end
-    end)
-    mouse.KeyUp:connect(function(key)
-        if key == apuKey2 then
-            picking = false
-        end
-    end)
+    end
+    if t == false then
+        autoTPPickUp = false
+    end
 end)
 Misc:Textbox("Auto TP Pick Up Item", true, function(t)
-    apuitem2 = t
-end)
-Misc:Textbox("Auto TP Pick Up Key", true, function(t)
     apuitem2 = t
 end)
 adItem = nil
@@ -345,7 +244,7 @@ end)
 Misc:Textbox("Auto Drop Key", true, function(t)
     adKey = t
 end)
-Misc:Toggle("Color Changing Skin (Laggy on very bad pcs)",false, function(t)
+Misc:Toggle("Color Changing Skin (Laggy on very bad pcs)", function(t)
     if t == true then
         cCS = true
         while cCS and wait(0.3) do
@@ -438,27 +337,6 @@ Misc:Button("Infinity Yield", function()
 end)
 
 
---Render
-
-
-local Render = s:Tab("Render")
-Render:Button("Remove Rain", function()
-    if workspace:FindFirstChild('RainPart') ~= nil then
-        workspace.RainPart:Destroy()
-        game.ReplicatedStorage.Sounds.Nature.Rain:Stop()
-        game.ReplicatedStorage.Sounds.Nature.Thunder:Stop()
-        game.Lighting.Rain:Destroy()
-        game.ReplicatedStorage.Skies.Shine:Clone().Parent = game.Lighting
-    end
-end)
-Render:Slider("Fov", 0,120,70, function(t)
-    game:GetService'Workspace'.Camera.FieldOfView = t
-end)
-Render:Button("UnnamedESP", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/ic3w0lf22/Unnamed-ESP/master/UnnamedESP.lua", true))()
-end)
-
-
 --Auto Farm
 
 
@@ -511,4 +389,121 @@ AutoFarm:Dropdown("Target",{"Iron Node", "Coal Node", "Magnetite Iceberg", "Tote
 end)
 AutoFarm:Slider("Wait Time",0.1,15,1,function(t)
     TimeBetweenEach = t
+end)
+AutoFarm:Label("For Auto Plant item don't write the plant name")
+AutoFarm:Label("Write the name of the item you use plant it")
+autoPlantPlant = nil
+AutoFarm:Toggle("Auto Plant",function(t)
+    if t == true then
+        planting = true
+        while planting == true and wait() do
+            for _, v in pairs(workspace.Deployables:GetChildren()) do
+                if v.Name == "Plant Box" and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 60 then
+                    game.ReplicatedStorage.Events.InteractStructure:FireServer(v, autoPlantPlant)
+                end
+            end
+        end
+    end
+    if t == false then
+        planting = false
+    end
+end)
+AutoFarm:Textbox("Auto Plant Item", true,function(t)
+    autoPlantPlant = t
+end)
+
+
+--Render
+
+
+local Render = s:Tab("Render")
+Render:Button("Remove Rain", function()
+    if workspace:FindFirstChild('RainPart') ~= nil then
+        workspace.RainPart:Destroy()
+        game.ReplicatedStorage.Sounds.Nature.Rain:Stop()
+        game.ReplicatedStorage.Sounds.Nature.Thunder:Stop()
+        game.Lighting.Rain:Destroy()
+        game.ReplicatedStorage.Skies.Shine:Clone().Parent = game.Lighting
+    end
+end)
+Render:Slider("Fov", 0,120,70, function(t)
+    game:GetService'Workspace'.Camera.FieldOfView = t
+end)
+Render:Button("UnnamedESP", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ic3w0lf22/Unnamed-ESP/master/UnnamedESP.lua", true))()
+end)
+
+
+--Building
+
+
+local Building = s:Tab("Building")
+Building:Button("Place Chest Campfire (1 Chest, 4 Campfires)", function()
+    local Fires = 1
+    local Event = game:GetService("ReplicatedStorage").Events.PlaceStructure
+    h = game.Players.LocalPlayer.Character.LowerTorso.Position
+    local c = h.x + 5
+    local d = h.y - 2
+    local e = h.z
+    local j = h.x
+    local k = h.y - 2
+    local l = h.z
+    local aa = h.x - 5
+    local bb = h.y - 2
+    local cc = h.z
+    local aaa = h.x
+    local bbb = h.y - 2
+    local ccc = h.z + 5
+    local aaaa = h.x
+    local bbbb = h.y - 2
+    local cccc = h.z - 5
+    for i = 1,1 do
+        local C_1 = "Chest"
+        local C_2 = CFrame.new(j, k, l, 1, 0, 0, 0, 1, -5.56028681e-08, 0, -5.56028681e-08, 1)
+        local C_3 = 0
+        Event:FireServer(C_1, C_2, C_3)
+    end
+    for i = 1,Fires do
+        local A_1 = "Campfire"
+        local A_2 = CFrame.new(c, d, e, 1, 0, 0, 0, 1, -5.56028681e-08, 0, -5.56028681e-08, 1)
+        local A_3 = 0
+        Event:FireServer(A_1, A_2, A_3)
+    end
+    for i = 1,Fires do
+        local B_1 = "Campfire"
+        local B_2 = CFrame.new(aa, bb, cc, 1, 0, 0, 0, 1, -5.56028681e-08, 0, -5.56028681e-08, 1)
+        local B_3 = 0
+        Event:FireServer(B_1, B_2, B_3)
+    end
+    for i = 1,Fires do
+        local D_1 = "Campfire"
+        local D_2 = CFrame.new(aaa, bbb, ccc, 1, 0, 0, 0, 1, -5.56028681e-08, 0, -5.56028681e-08, 1)
+        local D_3 = 0
+        Event:FireServer(D_1, D_2, D_3)
+    end
+    for i = 1,Fires do
+        local E_1 = "Campfire"
+        local E_2 = CFrame.new(aaaa, bbbb, cccc, 1, 0, 0, 0, 1, -5.56028681e-08, 0, -5.56028681e-08, 1)
+        local E_3 = 0
+        Event:FireServer(E_1, E_2, E_3)
+    end
+end)
+Building:Button("Place Plant Box", function()
+    local ohCFrame2 = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+    local ohNumber3 = 0
+
+    game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Plant Box", ohCFrame2, ohNumber3)
+end)
+Building:Button("Egg Farm (4 Nests, 2 Campfires)", function()
+    local ohCFrame2 = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+    local ohNumber3 = 0
+    local ohCFrame3 = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x + 2, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+
+
+    game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Nest", ohCFrame2, ohNumber3)
+    game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Nest", ohCFrame2, ohNumber3)
+    game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Nest", ohCFrame2, ohNumber3)
+    game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Nest", ohCFrame2, ohNumber3)
+    game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Campfire", ohCFrame2, ohNumber3)
+    game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Campfire", ohCFrame3, ohNumber3)
 end)
