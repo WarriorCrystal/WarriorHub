@@ -2,6 +2,7 @@ local VLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/vep1032/
 
 local s = VLib:Window("Warrior Hub", "Booga Booga", "W")
 
+
 --Main
 
 
@@ -19,14 +20,15 @@ end)
 
 local Combat = s:Tab("Combat")
 killing = false
+killAuraDelay = 0
 Combat:Toggle("Kill Aura",function(t)
     local plrs = game:GetService"Players"
     if t == true then
         killing = true
-        while killing and wait() do
+        while killing and wait(killAuraDelay) do
             for _,v in pairs(plrs:GetPlayers()) do
                 local distance = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).Magnitude
-                if v ~= plrs.LocalPlayer and v.Name ~= "valensoysantijajaja" and distance <= 12 then
+                if v ~= plrs.LocalPlayer and v.Name ~= "valensoysantijajaja" and v.Name ~= "SusLordCv" and distance <= 12 then
                     local ohNumber1 = game:GetService("ReplicatedStorage").RelativeTime.Value
                     local ohTable2 = {
                         [1] = workspace.Characters[v.Name].LeftUpperLeg,
@@ -49,6 +51,9 @@ Combat:Toggle("Kill Aura",function(t)
         killing = false
     end
 end)
+Combat:Slider("Delay",0.0,2.0,0.0,function(t)
+    killAuraDelay = t
+end)
 tpspamv = nil
 tpupval = 0
 tpspammode = "Normal"
@@ -59,7 +64,7 @@ Combat:Toggle("Teleport Spam",function(t)
         while tping and wait() do
             for i,v in pairs(game:GetService("Players"):GetChildren()) do
                 if v.Name:lower():find(tpspamv:lower()) then
-                    if v.Name == "valensoysantijajaja" then
+                    if v.Name == "SusLordCv" or v.Name == "valensoysantijajaja" then
                         return
                     elseif tpspammode == "Normal" then
                         player = game.Players.LocalPlayer.Character
@@ -91,7 +96,7 @@ end)
 Combat:Textbox("Normal TP", true,function(t)
     for i,v in pairs(game:GetService("Players"):GetChildren()) do
         if v.Name:lower():find(t:lower()) then
-            if v.Name == "valensoysantijajaja" then
+            if v.Name == "SusLordCv" or v.Name == "valensoysantijajaja" then
                 return
             else
                 player = game.Players.LocalPlayer.Character
@@ -99,6 +104,35 @@ Combat:Textbox("Normal TP", true,function(t)
             end
         end
     end
+end)
+HealItem = nil
+HealthCheck = false
+Combat:Toggle("Auto Heal",function(t)
+    if t == true then
+        HealthCheck = true
+        spawn(function()
+            while HealthCheck == true and wait() do
+                Health = game.Players.LocalPlayer.Character.Humanoid.Health
+                print(Health)
+            end
+        end)
+        spawn(function()
+            while wait(1) do
+                if Health ~= 100 and HealItem ~= nil then
+                    repeat
+                        game:GetService("ReplicatedStorage").Events.UseBagItem:FireServer(HealItem)
+                        wait(0.1)
+                    until game.Players.LocalPlayer.Character.Humanoid.Health == 100
+                end
+            end
+        end)
+    end
+    if t == false then
+        HealthCheck = false
+    end
+end)
+Combat:Textbox("Auto Heal Item", true,function(t)
+    HealItem = t
 end)
 
 
@@ -202,18 +236,31 @@ Misc:Toggle("Auto Pick Up",function(t)
     end
 end)
 apuitem2 = nil
+autoTPPickUpMode = "Item Select"
 Misc:Toggle("Auto TP Pick Up",function(t)
     if t == true then
         autoTPPickUp = true
         while autoTPPickUp == true and wait() do
-            local asd = game.Workspace.Items[apuitem2]
-            game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(asd)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = asd.Item.CFrame
+            if autoTPPickUpMode == "Item Select" then
+                local asd = game.Workspace.Items[apuitem2]
+                game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(asd)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = asd.Item.CFrame
+            elseif autoTPPickUpMode == "Any" then
+                for _, v in pairs(workspace.Items:GetChildren()) do
+                    if v ~= nil and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 3000 then
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
+                        game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
+                    end
+                end
+            end
         end
     end
     if t == false then
         autoTPPickUp = false
     end
+end)
+Misc:Dropdown("Auto TP Pick Up Mode",{"Item Select", "Any"},function(t)
+    autoTPPickUpMode = t
 end)
 Misc:Textbox("Auto TP Pick Up Item", true, function(t)
     apuitem2 = t
@@ -308,7 +355,7 @@ Misc:Dropdown("Meteor Teleports",{"Crystal Meteor", "Magnetite Meteor"},function
     elseif t == "Magnetite Meteor" then
         meteor = "Meteor Core"
     end
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Resources[meteor].Reference.CFrame
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Resources[meteor]["Small Rock"].Reference.CFrame
 end)
 Misc:Dropdown("Ore and Other Teleports",{"Coal Node", "Iron Node", "Gold Node", "Stone Node", "Dead Tree", "Goober", "Beached Boi"},function(t)
     if t == "Beached Boi" then
@@ -334,6 +381,14 @@ Misc:Dropdown("Lobbys",{"Unused Lobby", "Lobby"},function(t)
 end)
 Misc:Button("Infinity Yield", function()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+end)
+Misc:Button("Server Hop", function()
+    local Servers = game.HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/4787629450/servers/Public?sortOrder=Asc&limit=100"))
+    for i,v in pairs(Servers.data) do
+        if v.playing ~= v.maxPlayers then
+            game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, v.id)
+        end
+    end
 end)
 
 
