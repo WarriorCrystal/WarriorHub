@@ -20,12 +20,11 @@ end)
 
 local Combat = s:Tab("Combat")
 killing = false
-killAuraDelay = 0
 Combat:Toggle("Kill Aura",function(t)
     local plrs = game:GetService"Players"
     if t == true then
         killing = true
-        while killing and wait(killAuraDelay) do
+        while killing and wait(0.1) do
             for _,v in pairs(plrs:GetPlayers()) do
                 local distance = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).Magnitude
                 if v ~= plrs.LocalPlayer and v.Name ~= "valensoysantijajaja" and v.Name ~= "SusLordCv" and distance <= 12 then
@@ -50,9 +49,6 @@ Combat:Toggle("Kill Aura",function(t)
     if t == false then
         killing = false
     end
-end)
-Combat:Slider("Delay",0.0,2.0,0.0,function(t)
-    killAuraDelay = t
 end)
 tpspamv = nil
 tpupval = 0
