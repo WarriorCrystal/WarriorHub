@@ -26,7 +26,7 @@ Combat:Toggle("Kill Aura",function(t)
         getgenv().killing = true
         spawn(function()
             while getgenv().killing and wait(0.1) do
-                for _,v in pairs(plrs:GetPlayers()) do
+                for i, v in pairs(plrs:GetPlayers()) do
                     local distance = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).Magnitude
                     if v ~= plrs.LocalPlayer and v.Name ~= "valensoysantijajaja" and v.Name ~= "SusLordCv" and distance <= 12 then
                         local ohNumber1 = game:GetService("ReplicatedStorage").RelativeTime.Value
@@ -55,7 +55,7 @@ end)
 getgenv().tpspamv = nil
 getgenv().tpupval = 0
 getgenv().tpspammode = "Normal"
-getgenv().tping
+getgenv().tping =
 Combat:Toggle("Teleport Spam",function(t)
     if t == true then
         getgenv().tping = true
@@ -563,15 +563,12 @@ end)
 Building:Button("Place Plant Box", function()
     local ohCFrame2 = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
     local ohNumber3 = 0
-
     game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Plant Box", ohCFrame2, ohNumber3)
 end)
 Building:Button("Egg Farm (4 Nests, 2 Campfires)", function()
     local ohCFrame2 = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
     local ohNumber3 = 0
     local ohCFrame3 = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x + 2, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
-
-
     game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Nest", ohCFrame2, ohNumber3)
     game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Nest", ohCFrame2, ohNumber3)
     game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Nest", ohCFrame2, ohNumber3)
