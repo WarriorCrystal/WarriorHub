@@ -267,6 +267,35 @@ end)
 Misc:Textbox("Auto TP Pick Up Item", true, function(t)
     getgenv().apuitem2 = t
 end)
+getgenv().autoTPRWPickUp = false
+Misc:Toggle("Auto TP Pick Up RW",function(t)
+     if t == true then 
+        getgenv().autoTPRWPickUpPicking = true
+        spawn(function()
+            while getgenv().autoTPRWPickUpPicking == true and wait(0.2) do
+                if getgenv().autoTPPickUpMode == "Item Select" then
+                    for _, v in pairs(game:GetService("Workspace").Items:FindFirstChild(apuitem2)) do
+                        if v ~= nil then
+                            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
+                            game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
+                        end
+                    end
+                elseif getgenv().autoTPPickUpMode == "Any" then
+                    for _, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
+                        if v ~= nil then
+                            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
+                            wait(0.1)
+                            game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
+                        end
+                    end
+                end
+            end
+        end)
+    end
+    if t == false then
+        getgenv().autoTPRWPickUpPicking = false
+    end
+end)
 getgenv().adItem = nil
 getgenv().adKey = "f"
 getgenv().dropping = false
