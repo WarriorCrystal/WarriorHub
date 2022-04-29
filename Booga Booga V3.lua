@@ -20,33 +20,25 @@ end)
 
 local Combat = s:Tab("Combat")
 getgenv().killing = false
-Combat:Toggle("Kill Aura",function(t)
-    local plrs = game:GetService"Players"
-    if t == true then
-        getgenv().killing = true
+local function useAura()
         spawn(function()
-            while getgenv().killing and wait(0.1) do
-                for i, v in pairs(plrs:GetPlayers()) do
-                    local distance = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).Magnitude
-                    if v ~= plrs.LocalPlayer and v.Name ~= "valensoysantijajaja" and v.Name ~= "SusLordCv" and distance <= 12 then
-                        local ohNumber1 = game:GetService("ReplicatedStorage").RelativeTime.Value
-                        local ohTable2 = {
-                            [1] = workspace.Characters[v.Name].LeftUpperLeg,
-                            [2] = workspace.Characters[v.Name].HumanoidRootPart,
-                            [3] = workspace.Characters[v.Name].LeftLowerArm,
-                            [4] = workspace.Characters[v.Name].LowerTorso,
-                            [5] = workspace.Characters[v.Name].LeftFoot,
-                            [6] = workspace.Characters[v.Name].LeftHand,
-                            [7] = workspace.Characters[v.Name].LeftLowerLeg,
-                            [8] = workspace.Characters[v.Name].UpperTorso,
-                            [9] = workspace.Characters[v.Name].Head,
-                            [10] = workspace.Characters[v.Name].LeftUpperArm
-                        }
-                        game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(ohNumber1, ohTable2)
-                    end
+            while getgenv().killing == true and wait(0.1) do
+            for i, v in pairs(game:GetService("Players"):GetPlayers()) do
+                if v ~= game:GetService("Players").LocalPlayer and v.Name ~= "valensoysantijajaja" and v.Name ~= "SusLordCV" and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).magnitude < 20 then
+                    local rTV = game:GetService("ReplicatedStorage").RelativeTime.Value
+                    local attackTable = {
+                        [1] = workspace.Characters[v.Name].LeftUpperLeg,
+                    }
+                    game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(rTV, attackTable)
+                end
                 end
             end
         end)
+end
+Combat:Toggle("Kill Aura",function(t)
+    if t == true then
+        getgenv().killing = true
+        useAura()
     end
     if t == false then
         getgenv().killing = false
