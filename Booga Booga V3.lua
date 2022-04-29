@@ -47,7 +47,7 @@ end)
 getgenv().tpspamv = nil
 getgenv().tpupval = 0
 getgenv().tpspammode = "Normal"
-getgenv().tping =
+getgenv().tping = false
 Combat:Toggle("Teleport Spam",function(t)
     if t == true then
         getgenv().tping = true
