@@ -241,38 +241,7 @@ Misc:Toggle("Auto TP Pick Up",function(t)
     if t == true then
         getgenv().autoTPPickUp = true
         spawn(function()
-            while getgenv().autoTPPickUp == true and wait() do
-                if getgenv().autoTPPickUpMode == "Item Select" then
-                    local asd = game.Workspace.Items[getgenv().apuitem2]
-                    game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(asd)
-                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = asd.Item.CFrame
-                elseif getgenv().autoTPPickUpMode == "Any" then
-                    for _, v in pairs(workspace.Items:GetChildren()) do
-                        if v ~= nil and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 3000 then
-                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
-                            game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
-                        end
-                    end
-                end
-            end
-        end)
-    end
-    if t == false then
-        getgenv().autoTPPickUp = false
-    end
-end)
-Misc:Dropdown("Auto TP Pick Up Mode",{"Item Select", "Any"},function(t)
-    getgenv().autoTPPickUpMode = t
-end)
-Misc:Textbox("Auto TP Pick Up Item", true, function(t)
-    getgenv().apuitem2 = t
-end)
-getgenv().autoTPRWPickUp = false
-Misc:Toggle("Auto TP Pick Up RW",function(t)
-     if t == true then 
-        getgenv().autoTPRWPickUpPicking = true
-        spawn(function()
-            while getgenv().autoTPRWPickUpPicking == true and wait(0.2) do
+            while getgenv().autoTPPickUp == true and wait(0.2) do
                 if getgenv().autoTPPickUpMode == "Item Select" then
                     for _, v in pairs(game:GetService("Workspace").Items:FindFirstChild(apuitem2)) do
                         if v ~= nil then
@@ -293,8 +262,14 @@ Misc:Toggle("Auto TP Pick Up RW",function(t)
         end)
     end
     if t == false then
-        getgenv().autoTPRWPickUpPicking = false
+        getgenv().autoTPPickUp = false
     end
+end)
+Misc:Dropdown("Auto TP Pick Up Mode",{"Item Select", "Any"},function(t)
+    getgenv().autoTPPickUpMode = t
+end)
+Misc:Textbox("Auto TP Pick Up Item", true, function(t)
+    getgenv().apuitem2 = t
 end)
 getgenv().adItem = nil
 getgenv().adKey = "f"
