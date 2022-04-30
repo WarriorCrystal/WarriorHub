@@ -1,7 +1,8 @@
 local VLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/vep1032/VepStuff/main/VL"))()
-
+local NotificationHolder = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Module.Lua"))()
+local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Client.Lua"))()
 local s = VLib:Window("Warrior Hub", "Booga Booga", "W")
-
+getgenv().notifColor = Color3.fromRGB(80, 80, 80)
 
 --Main
 
@@ -13,6 +14,9 @@ Main:Label("Toggle GUI with RCTRL")
 Main:Button("Destroy GUI",function()
     game:GetService("CoreGui").Library:Destroy()
 end)
+Main:Colorpicker("Notification Color",Color3.fromRGB(255, 1, 1),function(t)
+    getgenv().notifColor = t
+end)
 
 
 --Combat
@@ -21,8 +25,8 @@ end)
 local Combat = s:Tab("Combat")
 getgenv().killing = false
 local function useAura()
-        spawn(function()
-            while getgenv().killing == true and wait(0.1) do
+    spawn(function()
+        while getgenv().killing == true and wait(0.1) do
             for i, v in pairs(game:GetService("Players"):GetPlayers()) do
                 if v ~= game:GetService("Players").LocalPlayer and v.Name ~= "valensoysantijajaja" and v.Name ~= "SusLordCV" and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).magnitude < 20 then
                     local rTV = game:GetService("ReplicatedStorage").RelativeTime.Value
@@ -31,9 +35,9 @@ local function useAura()
                     }
                     game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(rTV, attackTable)
                 end
-                end
             end
-        end)
+        end
+    end)
 end
 Combat:Toggle("Kill Aura",function(t)
     if t == true then
@@ -87,6 +91,10 @@ Combat:Slider("TP Spam distance (use a fly script or you may die)", 0,10,0, func
 end)
 Combat:Textbox("TP Spam Name",true, function(t)
     getgenv().tpspamv = t
+    Notification:Notify(
+        {Title = "TP Spam", Description = "Name set to ".. t},
+        {OutlineColor = getgenv().notifColor,Time = 2, Type = "default"}
+    )
 end)
 Combat:Textbox("Normal TP", true,function(t)
     for i,v in pairs(game:GetService("Players"):GetChildren()) do
@@ -129,6 +137,10 @@ Combat:Toggle("Auto Heal",function(t)
 end)
 Combat:Textbox("Auto Heal Item", true,function(t)
     getgenv().HealItem = t
+    Notification:Notify(
+        {Title = "Auto Heal", Description = "Item set to ".. t},
+        {OutlineColor = getgenv().notifColor,Time = 2, Type = "default"}
+    )
 end)
 
 
@@ -164,6 +176,10 @@ Movement:Slider("Speed Multiplier",0,100,3,function(t)
 end)
 Movement:Textbox("Speed Key", true,function(t)
     getgenv().speedkey = t
+    Notification:Notify(
+    {Title = "Speed", Description = "Keybind set to ".. t},
+    {OutlineColor = getgenv().notifColor,Time = 2, Type = "default"}
+)
 end)
 getgenv().GJumpPower = 50
 Movement:Button("Infinity Jump",function()
@@ -215,6 +231,10 @@ Misc:Button("Auto Break (Aim and Hold)", function()
 end)
 Misc:Textbox("Auto Break Key", true,function(t)
     getgenv().abKey = t:lower()
+    Notification:Notify(
+        {Title = "Auto Break", Description = "Key set to ".. t},
+        {OutlineColor = getgenv().notifColor,Time = 2, Type = "default"}
+    )
 end)
 getgenv().autoPickUpPicking = false
 Misc:Toggle("Auto Pick Up",function(t)
@@ -234,7 +254,7 @@ Misc:Toggle("Auto Pick Up",function(t)
         getgenv().autoPickUpPicking = false
     end
 end)
-getgenv().apuitem2 = nil
+getgenv().autoTPPUItem = nil
 getgenv().autoTPPickUpMode = "Item Select"
 getgenv().autoTPPickUp = false
 Misc:Toggle("Auto TP Pick Up",function(t)
@@ -243,15 +263,15 @@ Misc:Toggle("Auto TP Pick Up",function(t)
         spawn(function()
             while getgenv().autoTPPickUp == true and wait(0.2) do
                 if getgenv().autoTPPickUpMode == "Item Select" then
-                    for _, v in pairs(game:GetService("Workspace").Items:FindFirstChild(apuitem2)) do
-                        if v ~= nil then
+                    for _, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
+                        if v ~= nil and v.Name == getgenv().autoTPPUItem then
                             game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
                             game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
                         end
                     end
                 elseif getgenv().autoTPPickUpMode == "Any" then
                     for _, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
-                        if v ~= nil then
+                        if v ~= nil and v.Name ~= "fafgdf" then
                             game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
                             wait(0.1)
                             game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
@@ -269,7 +289,11 @@ Misc:Dropdown("Auto TP Pick Up Mode",{"Item Select", "Any"},function(t)
     getgenv().autoTPPickUpMode = t
 end)
 Misc:Textbox("Auto TP Pick Up Item", true, function(t)
-    getgenv().apuitem2 = t
+    getgenv().autoTPPUItem = t
+    Notification:Notify(
+    {Title = "Auto TP Pick Up", Description = "Item set to ".. t},
+    {OutlineColor = getgenv().notifColor,Time = 2, Type = "default"}
+)
 end)
 getgenv().adItem = nil
 getgenv().adKey = "f"
@@ -287,15 +311,23 @@ Misc:Button("Auto Drop (Hold)", function()
     end)
     mouse.KeyUp:connect(function(key)
         if key == getgenv().adKey then
-            dropping = false
+            getgenv().dropping = false
         end
     end)
 end)
 Misc:Textbox("Auto Drop Item", true, function(t)
     getgenv().adItem = t
+    Notification:Notify(
+        {Title = "Auto Drop", Description = "Item set to ".. t},
+        {OutlineColor = getgenv().notifColor,Time = 2, Type = "default"}
+    )
 end)
 Misc:Textbox("Auto Drop Key", true, function(t)
     getgenv().adKey = t
+    Notification:Notify(
+        {Title = "Auto Drop", Description = "Key set to ".. t},
+        {OutlineColor = getgenv().notifColor,Time = 2, Type = "default"}
+    )
 end)
 getgenv().cCS = false
 Misc:Toggle("Color Changing Skin (Laggy on very bad pcs)", function(t)
@@ -333,12 +365,19 @@ end)
 Misc:Textbox("Craft Item", true, function(t)
     local crString1 = t
     game:GetService("ReplicatedStorage").Events.CraftItem:FireServer(crString1)
+    Notification:Notify(
+    {Title = "Craft", Description = "Attemped to craft ".. t},
+    {OutlineColor = getgenv().notifColor,Time = 2, Type = "default"}
+)
 end)
 Misc:Button("Craft Lvl 1000 Golden Boat (you have to be on water)", function()
     local ohCFrame2 = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
     local ohNumber3 = 0
-
     game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Golden Sailboat", ohCFrame2, ohNumber3)
+    Notification:Notify(
+    {Title = "Craft", Description = "Attemped to craft Golden Sailboat"},
+    {OutlineColor = getgenv().notifColor,Time = 2, Type = "default"}
+)
 end)
 Misc:Button("Craft Mag Set", function()
     game:GetService("ReplicatedStorage").Events.CraftItem:FireServer("Magnetite Mask")
@@ -347,6 +386,10 @@ Misc:Button("Craft Mag Set", function()
     game:GetService("ReplicatedStorage").Events.CraftItem:FireServer("Magnetite Stick")
     game:GetService("ReplicatedStorage").Events.CraftItem:FireServer("Magnetite Pick")
     game:GetService("ReplicatedStorage").Events.CraftItem:FireServer("Magnetite Axe")
+    Notification:Notify(
+    {Title = "Craft", Description = "Attemped to craft a mag set"},
+    {OutlineColor = getgenv().notifColor,Time = 2, Type = "default"}
+)
 end)
 Misc:Dropdown("Shelly Teleports",{"Random Small Shelly", "Random Big Shelly", "Random Giant Shelly"},function(t)
     if t == "Random Small Shelly" then
@@ -405,7 +448,6 @@ end)
 
 
 local AutoFarm = s:Tab("Auto Farm")
-AutoFarm:Label("You have to collect manually")
 AutoFarm:Label("You should use auto pick up for collecting")
 AutoFarm:Label("Equip a pick or an axe depending on what you select")
 getgenv().FarmingObject = nil
@@ -451,6 +493,17 @@ AutoFarm:Toggle("Auto Farm",function(t)
 end)
 AutoFarm:Dropdown("Target",{"Iron Node", "Coal Node", "Magnetite Iceberg", "Totem of the Moon", "Dead Tree", "Gold Node", "Stone Node", "Ancient Tree", "Ancient Feather Tree", "Shelly"},function(t)
     getgenv().FarmingObject = t
+    Notification:Notify(
+    {Title = "Auto Farm", Description = "Target set to ".. t},
+    {OutlineColor = getgenv().notifColor,Time = 2, Type = "default"}
+)
+end)
+AutoFarm:Textbox("Custom Target", true,function(t)
+    getgenv().FarmingObject = t
+    Notification:Notify(
+        {Title = "Auto Farm", Description = "Target set to ".. t},
+        {OutlineColor = getgenv().notifColor,Time = 2, Type = "default"}
+    )
 end)
 AutoFarm:Slider("Wait Time",0.1,15,1,function(t)
     getgenv().TimeBetweenEach = t
@@ -478,6 +531,10 @@ AutoFarm:Toggle("Auto Plant",function(t)
 end)
 AutoFarm:Textbox("Auto Plant Item", true,function(t)
     getgenv().autoPlantPlant = t
+    Notification:Notify(
+    {Title = "Auto Plant", Description = "Item set to ".. t},
+    {OutlineColor = getgenv().notifColor,Time = 2, Type = "default"}
+)
 end)
 
 
