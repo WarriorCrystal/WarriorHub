@@ -22,6 +22,7 @@ end)
 
 -- Movement
 
+
 local Movement = s:Tab("Movement")
 getgenv().GJumpPower = 50
 Movement:Button("Infinity Jump",function()
@@ -41,14 +42,14 @@ Movement:Button("Infinity Jump",function()
     end)
 end)
 Movement:Slider("Jump Power", 0,300,50, function(t)
-    game.Players.LocalPlayer.Character.Humanoid.JumpPower = t
+    game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = t
     getgenv().GJumpPower = t
 end)
-Movement:Slider("Walkspeed", 0,300,16, function(t)
-    game.Players.LocalPlayer.Character.Humanoid.Waklspeed = t
+Movement:Slider("WalkSpeed", 0,300,16, function(t)
+    game:GetService("Players").LocalPlayer.Character.Humanoid.WaklSpeed = t
 end)
 Movement:Slider("Gravity", 0,300,192.2, function(t)
-    game.Players.LocalPlayer.Character.Humanoid.Gravity = t
+    game:GetService("Workspace").Gravity = t
 end)
 
 
