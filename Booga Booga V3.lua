@@ -15,6 +15,13 @@ Main:Label("Toggle GUI with RCTRL")
 Main:Button("Destroy GUI",function()
     game:GetService("CoreGui").Library:Destroy()
 end)
+Main:Button("Copy Discord",function()
+    setclipboard("https://discord.gg/RPm75PFnp2")
+    Notification:Notify(
+        {Title = "Warrior Hub", Description = "Copied Discord to Clipboard"},
+        {OutlineColor = getgenv().notifColor,Time = 2, Type = "default"}
+    )
+end)
 Main:Colorpicker("Notification Color",Color3.fromRGB(80, 80, 80),function(t)
     getgenv().notifColor = t
 end)
