@@ -4,6 +4,7 @@ local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/
 local s = VLib:Window("Warrior Hub", "Booga Booga", "W")
 getgenv().notifColor = Color3.fromRGB(80, 80, 80)
 
+
 --Main
 
 
@@ -14,7 +15,7 @@ Main:Label("Toggle GUI with RCTRL")
 Main:Button("Destroy GUI",function()
     game:GetService("CoreGui").Library:Destroy()
 end)
-Main:Colorpicker("Notification Color",Color3.fromRGB(255, 1, 1),function(t)
+Main:Colorpicker("Notification Color",Color3.fromRGB(80, 80, 80),function(t)
     getgenv().notifColor = t
 end)
 
@@ -24,7 +25,7 @@ end)
 
 local Combat = s:Tab("Combat")
 getgenv().killing = false
-local function useAura()
+function useAura()
     spawn(function()
         while getgenv().killing == true and wait(0.1) do
             for i, v in pairs(game:GetService("Players"):GetPlayers()) do
@@ -40,48 +41,38 @@ local function useAura()
     end)
 end
 Combat:Toggle("Kill Aura",function(t)
-    if t == true then
-        getgenv().killing = true
-        useAura()
-    end
-    if t == false then
-        getgenv().killing = false
-    end
+    getgenv().killing = t
+    useAura()
 end)
 getgenv().tpspamv = nil
 getgenv().tpupval = 0
 getgenv().tpspammode = "Normal"
 getgenv().tping = false
 Combat:Toggle("Teleport Spam",function(t)
-    if t == true then
-        getgenv().tping = true
-        spawn(function()
-            while getgenv().tping and wait() do
-                for i,v in pairs(game:GetService("Players"):GetChildren()) do
-                    if v.Name:lower():find(getgenv().tpspamv:lower()) then
-                        if v.Name == "SusLordCv" or v.Name == "valensoysantijajaja" then
-                            return
-                        elseif getgenv().tpspammode == "Normal" then
-                            player = game.Players.LocalPlayer.Character
-                            player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y, v.Character.HumanoidRootPart.Position.z)
-                        elseif getgenv().tpspammode == "Up" then
-                            player = game.Players.LocalPlayer.Character
-                            player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y + getgenv().tpupval, v.Character.HumanoidRootPart.Position.z)
-                        elseif getgenv().tpspammode == "Down" then
-                            player = game.Players.LocalPlayer.Character
-                            player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y - getgenv().tpupval, v.Character.HumanoidRootPart.Position.z)
-                        elseif getgenv().tpspammode == "Around" then
-                            player = game.Players.LocalPlayer.Character
-                            player.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * CFrame.new(v.Character.HumanoidRootPart.CFrame.lookVector * getgenv().tpupval)
-                        end
+    getgenv().tping = t
+    spawn(function()
+        while getgenv().tping and wait() do
+            for i,v in pairs(game:GetService("Players"):GetChildren()) do
+                if v.Name:lower():find(getgenv().tpspamv:lower()) then
+                    if v.Name == "SusLordCv" or v.Name == "valensoysantijajaja" then
+                        return
+                    elseif getgenv().tpspammode == "Normal" then
+                        player = game.Players.LocalPlayer.Character
+                        player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y, v.Character.HumanoidRootPart.Position.z)
+                    elseif getgenv().tpspammode == "Up" then
+                        player = game.Players.LocalPlayer.Character
+                        player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y + getgenv().tpupval, v.Character.HumanoidRootPart.Position.z)
+                    elseif getgenv().tpspammode == "Down" then
+                        player = game.Players.LocalPlayer.Character
+                        player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y - getgenv().tpupval, v.Character.HumanoidRootPart.Position.z)
+                    elseif getgenv().tpspammode == "Around" then
+                        player = game.Players.LocalPlayer.Character
+                        player.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * CFrame.new(v.Character.HumanoidRootPart.CFrame.lookVector * getgenv().tpupval)
                     end
                 end
             end
-        end)
-    end
-    if t == false then
-        getgenv().tping = false
-    end
+        end
+    end)
 end)
 Combat:Dropdown("TP Spam Mode",{"Normal", "Up", "Down", "Around"},function(t)
     getgenv().tpspammode = t
@@ -112,28 +103,23 @@ getgenv().HealItem = nil
 getgenv().HealthCheck = false
 getgenv().Health = nil
 Combat:Toggle("Auto Heal",function(t)
-    if t == true then
-        getgenv().HealthCheck = true
-        spawn(function()
-            while getgenv().HealthCheck == true and wait() do
-                getgenv().Health = game.Players.LocalPlayer.Character.Humanoid.Health
-                --print(Health)
+    getgenv().HealthCheck = t
+    spawn(function()
+        while getgenv().HealthCheck == true and wait() do
+            getgenv().Health = game.Players.LocalPlayer.Character.Humanoid.Health
+            --print(Health)
+        end
+    end)
+    spawn(function()
+        while wait(1) and getgenv().HealthCheck == true do
+            if getgenv().Health ~= 100 and getgenv().HealItem ~= nil then
+                repeat
+                    game:GetService("ReplicatedStorage").Events.UseBagItem:FireServer(getgenv().HealItem)
+                    wait(0.25)
+                until game.Players.LocalPlayer.Character.Humanoid.Health == 100
             end
-        end)
-        spawn(function()
-            while wait(1) and getgenv().HealthCheck == true do
-                if getgenv().Health ~= 100 and getgenv().HealItem ~= nil then
-                    repeat
-                        game:GetService("ReplicatedStorage").Events.UseBagItem:FireServer(getgenv().HealItem)
-                        wait(0.25)
-                    until game.Players.LocalPlayer.Character.Humanoid.Health == 100
-                end
-            end
-        end)
-    end
-    if t == false then
-        getgenv().HealthCheck = false
-    end
+        end
+    end)
 end)
 Combat:Textbox("Auto Heal Item", true,function(t)
     getgenv().HealItem = t
@@ -238,52 +224,42 @@ Misc:Textbox("Auto Break Key", true,function(t)
 end)
 getgenv().autoPickUpPicking = false
 Misc:Toggle("Auto Pick Up",function(t)
-    if t == true then
-        getgenv().autoPickUpPicking = true
-        spawn(function()
-            while getgenv().autoPickUpPicking == true and wait() do
-                for _, v in pairs(workspace.Items:GetChildren()) do
-                    if v ~= nil and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 20 then
-                        game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
-                    end
+    getgenv().autoPickUpPicking = t
+    spawn(function()
+        while getgenv().autoPickUpPicking == true and wait() do
+            for _, v in pairs(workspace.Items:GetChildren()) do
+                if v ~= nil and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 20 then
+                    game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
                 end
             end
-        end)
-    end
-    if t == false then
-        getgenv().autoPickUpPicking = false
-    end
+        end
+    end)
 end)
 getgenv().autoTPPUItem = nil
 getgenv().autoTPPickUpMode = "Item Select"
 getgenv().autoTPPickUp = false
 Misc:Toggle("Auto TP Pick Up",function(t)
-    if t == true then
-        getgenv().autoTPPickUp = true
-        spawn(function()
-            while getgenv().autoTPPickUp == true and wait(0.2) do
-                if getgenv().autoTPPickUpMode == "Item Select" then
-                    for _, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
-                        if v ~= nil and v.Name == getgenv().autoTPPUItem then
-                            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
-                            game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
-                        end
+    getgenv().autoTPPickUp = t
+    spawn(function()
+        while getgenv().autoTPPickUp == true and wait(0.2) do
+            if getgenv().autoTPPickUpMode == "Item Select" then
+                for _, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
+                    if v ~= nil and v.Name == getgenv().autoTPPUItem then
+                        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
+                        game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
                     end
-                elseif getgenv().autoTPPickUpMode == "Any" then
-                    for _, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
-                        if v ~= nil and v.Name ~= "fafgdf" then
-                            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
-                            wait(0.1)
-                            game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
-                        end
+                end
+            elseif getgenv().autoTPPickUpMode == "Any" then
+                for _, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
+                    if v ~= nil and v.Name ~= "fafgdf" then
+                        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
+                        wait(0.1)
+                        game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
                     end
                 end
             end
-        end)
-    end
-    if t == false then
-        getgenv().autoTPPickUp = false
-    end
+        end
+    end)
 end)
 Misc:Dropdown("Auto TP Pick Up Mode",{"Item Select", "Any"},function(t)
     getgenv().autoTPPickUpMode = t
@@ -331,36 +307,31 @@ Misc:Textbox("Auto Drop Key", true, function(t)
 end)
 getgenv().cCS = false
 Misc:Toggle("Color Changing Skin (Laggy on very bad pcs)", function(t)
-    if t == true then
-        getgenv().cCS = true
-        spawn(function()
-            while getgenv().cCS and wait(0.3) do
-                wait(0.15) do
-                local ohString1 = "skin"
-                local ohString2 = "Dark Brown"
-                game:GetService("ReplicatedStorage").Events.CosmeticChange:FireServer(ohString1, ohString2)
-            end
-                wait(0.15) do
-                local ohString3 = "skin"
-                local ohString4 = "Tan"
-                game:GetService("ReplicatedStorage").Events.CosmeticChange:FireServer(ohString3, ohString4)
-            end
-                wait(0.15) do
-                local ohString5 = "skin"
-                local ohString6 = "White"
-                game:GetService("ReplicatedStorage").Events.CosmeticChange:FireServer(ohString5, ohString6)
-            end
-                wait(0.15) do
-                local ohString7 = "skin"
-                local ohString8 = "Pale"
-                game:GetService("ReplicatedStorage").Events.CosmeticChange:FireServer(ohString7, ohString8)
-            end
-            end
-        end)
-    end
-    if t == false then
-        getgenv().cCS = false
-    end
+    getgenv().cCS = t
+    spawn(function()
+        while getgenv().cCS and wait(0.3) do
+            wait(0.15) do
+            local ohString1 = "skin"
+            local ohString2 = "Dark Brown"
+            game:GetService("ReplicatedStorage").Events.CosmeticChange:FireServer(ohString1, ohString2)
+        end
+            wait(0.15) do
+            local ohString3 = "skin"
+            local ohString4 = "Tan"
+            game:GetService("ReplicatedStorage").Events.CosmeticChange:FireServer(ohString3, ohString4)
+        end
+            wait(0.15) do
+            local ohString5 = "skin"
+            local ohString6 = "White"
+            game:GetService("ReplicatedStorage").Events.CosmeticChange:FireServer(ohString5, ohString6)
+        end
+            wait(0.15) do
+            local ohString7 = "skin"
+            local ohString8 = "Pale"
+            game:GetService("ReplicatedStorage").Events.CosmeticChange:FireServer(ohString7, ohString8)
+        end
+        end
+    end)
 end)
 Misc:Textbox("Craft Item", true, function(t)
     local crString1 = t
@@ -456,40 +427,33 @@ getgenv().farmingMineTarget = nil
 getgenv().farming = false
 getgenv().autoFarmTping = false
 AutoFarm:Toggle("Auto Farm",function(t)
-    if t == true then
-        getgenv().farming = true
-        getgenv().autoFarmTping = true
-        local shelly = "Stone Shelly"
-        spawn(function()
-            while getgenv().farming do
-                local af2Table2 = {
-                    [1] = getgenv().farmingMineTarget
+    getgenv().farming = t
+    getgenv().autoFarmTping = t
+    local shelly = "Stone Shelly"
+    spawn(function()
+        while getgenv().farming do
+            local af2Table2 = {
+                [1] = getgenv().farmingMineTarget
                 }
-                local af2Number1 = game:GetService("ReplicatedStorage").RelativeTime.Value
-                if FarmingObject == "Shelly" then
-                    getgenv().farmingMineTarget = game.Workspace.Critters[shelly].Head
-                else
-                    getgenv().farmingMineTarget = game.Workspace.Resources[getgenv().FarmingObject].Reference
-                end
-
-                game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(af2Number1, af2Table2)
-                wait()
-            end
-        end)
-        spawn(function()
-        while getgenv().autoFarmTping and wait(getgenv().TimeBetweenEach) do
-            if getgenv().FarmingObject == "Shelly" then
-                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Critters[shelly].Head.CFrame
+            local af2Number1 = game:GetService("ReplicatedStorage").RelativeTime.Value
+            if FarmingObject == "Shelly" then
+                getgenv().farmingMineTarget = game.Workspace.Critters[shelly].Head
             else
-                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Resources[FarmingObject].Reference.CFrame
+                getgenv().farmingMineTarget = game.Workspace.Resources[getgenv().FarmingObject].Reference
             end
+            game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(af2Number1, af2Table2)
+            wait()
         end
-        end)
+    end)
+    spawn(function()
+    while getgenv().autoFarmTping and wait(getgenv().TimeBetweenEach) do
+        if getgenv().FarmingObject == "Shelly" then
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game.Workspace.Critters[shelly].Head.Position.x, game.Workspace.Critters[shelly].Head.Position.y + 3, game.Workspace.Critters[shelly].Head.Position.z)
+        else
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game.Workspace.Resources[FarmingObject].Reference.Position.x, game.Workspace.Resources[FarmingObject].Reference.Position.y + 3, game.Workspace.Resources[FarmingObject].Reference.Position.z)
+        end
     end
-    if t == false then
-        getgenv().farming = false
-        getgenv().autoFarmTping = false
-    end
+    end)
 end)
 AutoFarm:Dropdown("Target",{"Iron Node", "Coal Node", "Magnetite Iceberg", "Totem of the Moon", "Dead Tree", "Gold Node", "Stone Node", "Ancient Tree", "Ancient Feather Tree", "Shelly"},function(t)
     getgenv().FarmingObject = t
@@ -513,21 +477,16 @@ AutoFarm:Label("Write the name of the item you use plant it")
 getgenv().autoPlantPlant = nil
 getgenv().planting = false
 AutoFarm:Toggle("Auto Plant",function(t)
-    if t == true then
-        getgenv().planting = true
-        spawn(function()
-            while getgenv().planting == true and wait() do
-                for _, v in pairs(workspace.Deployables:GetChildren()) do
-                    if v.Name == "Plant Box" and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 60 then
-                        game.ReplicatedStorage.Events.InteractStructure:FireServer(v, getgenv().autoPlantPlant)
-                    end
+    getgenv().planting = t
+    spawn(function()
+        while getgenv().planting == true and wait() do
+            for _, v in pairs(workspace.Deployables:GetChildren()) do
+                if v.Name == "Plant Box" and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 60 then
+                    game.ReplicatedStorage.Events.InteractStructure:FireServer(v, getgenv().autoPlantPlant)
                 end
             end
-        end)
-    end
-    if t == false then
-        getgenv().planting = false
-    end
+        end
+    end)
 end)
 AutoFarm:Textbox("Auto Plant Item", true,function(t)
     getgenv().autoPlantPlant = t
