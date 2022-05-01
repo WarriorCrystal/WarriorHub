@@ -55,6 +55,10 @@ Combat:Toggle("Teleport Spam",function(t)
             for i,v in pairs(game:GetService("Players"):GetChildren()) do
                 if v.Name:lower():find(getgenv().tpspamv:lower()) then
                     if v.Name == "SusLordCv" or v.Name == "valensoysantijajaja" then
+                        Notification:Notify(
+                            {Title = "TP Spam", Description = "You cant't kill this person"},
+                            {OutlineColor = getgenv().notifColor,Time = 2, Type = "default"}
+                        )
                         return
                     elseif getgenv().tpspammode == "Normal" then
                         player = game.Players.LocalPlayer.Character
@@ -91,6 +95,10 @@ Combat:Textbox("Normal TP", true,function(t)
     for i,v in pairs(game:GetService("Players"):GetChildren()) do
         if v.Name:lower():find(t:lower()) then
             if v.Name == "SusLordCv" or v.Name == "valensoysantijajaja" then
+                Notification:Notify(
+                    {Title = "TP Spam", Description = "You cant't kill this person"},
+                    {OutlineColor = getgenv().notifColor,Time = 2, Type = "default"}
+                )
                 return
             else
                 player = game.Players.LocalPlayer.Character
@@ -241,20 +249,27 @@ getgenv().autoTPPickUp = false
 Misc:Toggle("Auto TP Pick Up",function(t)
     getgenv().autoTPPickUp = t
     spawn(function()
-        while getgenv().autoTPPickUp == true and wait(0.2) do
+        while getgenv().autoTPPickUp == true and wait(1.5) do
             if getgenv().autoTPPickUpMode == "Item Select" then
                 for _, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
                     if v ~= nil and v.Name == getgenv().autoTPPUItem then
                         game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
+                        wait(1)
                         game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
+                        if getgenv().autoTPPickUp == false then
+                            break
+                        end
                     end
                 end
             elseif getgenv().autoTPPickUpMode == "Any" then
                 for _, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
                     if v ~= nil and v.Name ~= "fafgdf" then
                         game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
-                        wait(0.1)
+                        wait(1)
                         game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
+                        if getgenv().autoTPPickUp == false then
+                            break
+                        end
                     end
                 end
             end
