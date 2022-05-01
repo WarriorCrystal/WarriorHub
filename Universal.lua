@@ -46,7 +46,7 @@ Movement:Slider("Jump Power", 0,300,50, function(t)
     getgenv().GJumpPower = t
 end)
 Movement:Slider("WalkSpeed", 0,300,16, function(t)
-    game:GetService("Players").LocalPlayer.Character.Humanoid.WaklSpeed = t
+    game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed = t
 end)
 Movement:Slider("Gravity", 0,300,192.2, function(t)
     game:GetService("Workspace").Gravity = t
