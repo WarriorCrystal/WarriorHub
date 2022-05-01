@@ -22,7 +22,7 @@ end)
 
 -- Movement
 
-
+local Movement = s:Tab("Movement")
 getgenv().GJumpPower = 50
 Movement:Button("Infinity Jump",function()
     local Player = game:GetService'Players'.LocalPlayer;
