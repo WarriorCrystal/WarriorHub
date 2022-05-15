@@ -338,7 +338,7 @@ Misc:Toggle("Auto Eat",function(t)
     getgenv().HungerCheck = t
     spawn(function()
         while getgenv().HungerCheck == true and wait() do
-            getgenv().Hunger = game:GetService("Players").valensoysantijajaja.PlayerGui.MainGui.Panels.Toolbar.Stats.PlayerStats.Hunger.AmountLabel.Text
+            getgenv().Hunger = game:GetService("Players").LocalPlayer.PlayerGui.MainGui.Panels.Toolbar.Stats.PlayerStats.Hunger.AmountLabel.Text
             print(getgenv().Hunger)
         end
     end)
