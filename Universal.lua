@@ -86,3 +86,6 @@ end)
 OS:Button("Electroware",function()
     loadstring(game:HttpGet(("https://raw.githubusercontent.com/ayoyao3744/Electroware/main/Main%20Electroware%20Hub"), true))()
 end)
+OS:Button("R6 Animations",function()
+    loadstring(game:HttpGet("https://textbin.net/raw/k3sjvw3vrq"))();
+end)
