@@ -38,7 +38,7 @@ function useAura()
     spawn(function()
         while getgenv().killing == true and wait(0.1) do
             for i, v in pairs(game:GetService("Players"):GetPlayers()) do
-                if v ~= game:GetService("Players").LocalPlayer and v.Name ~= "valensoysantijajaja" and v.Name ~= "SusLordCV" and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).magnitude < 20 then
+                if v ~= nil and v.Character.Humanoid.Health ~= 0 and v ~= game:GetService("Players").LocalPlayer and v.Name ~= "valensoysantijajaja" and v.Name ~= "SusLordCV" and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).magnitude < 20 then
                     local rTV = game:GetService("ReplicatedStorage").RelativeTime.Value
                     local attackTable = {
                         [1] = game:GetService("Workspace").Characters[v.Name].LeftUpperLeg,
@@ -70,16 +70,16 @@ Combat:Toggle("Teleport Spam",function(t)
                         )
                         return
                     elseif getgenv().tpspammode == "Normal" then
-                        player = game.Players.LocalPlayer.Character
+                        player = game:GetService("Players").LocalPlayer.Character
                         player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y, v.Character.HumanoidRootPart.Position.z)
                     elseif getgenv().tpspammode == "Up" then
-                        player = game.Players.LocalPlayer.Character
+                        player = game:GetService("Players").LocalPlayer.Character
                         player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y + getgenv().tpupval, v.Character.HumanoidRootPart.Position.z)
                     elseif getgenv().tpspammode == "Down" then
-                        player = game.Players.LocalPlayer.Character
+                        player = game:GetService("Players").LocalPlayer.Character
                         player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y - getgenv().tpupval, v.Character.HumanoidRootPart.Position.z)
                     elseif getgenv().tpspammode == "Around" then
-                        player = game.Players.LocalPlayer.Character
+                        player = game:GetService("Players").LocalPlayer.Character
                         player.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * CFrame.new(v.Character.HumanoidRootPart.CFrame.lookVector * getgenv().tpupval)
                     end
                 end
@@ -110,7 +110,7 @@ Combat:Textbox("Normal TP", true,function(t)
                 )
                 return
             else
-                player = game.Players.LocalPlayer.Character
+                player = game:GetService("Players").LocalPlayer.Character
                 player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y, v.Character.HumanoidRootPart.Position.z)
             end
         end
@@ -123,7 +123,7 @@ Combat:Toggle("Auto Heal",function(t)
     getgenv().HealthCheck = t
     spawn(function()
         while getgenv().HealthCheck == true and wait() do
-            getgenv().Health = game.Players.LocalPlayer.Character.Humanoid.Health
+            getgenv().Health = game:GetService("Players").LocalPlayer.Character.Humanoid.Health
             --print(Health)
         end
     end)
@@ -133,7 +133,7 @@ Combat:Toggle("Auto Heal",function(t)
                 repeat
                     game:GetService("ReplicatedStorage").Events.UseBagItem:FireServer(getgenv().HealItem)
                     wait(0.15)
-                until game.Players.LocalPlayer.Character.Humanoid.Health == 100
+                until getgenv().Health == 100
             end
         end
     end)
@@ -202,7 +202,7 @@ Movement:Button("Infinity Jump",function()
     end)
 end)
 Movement:Slider("Jump Power", 0,300,50, function(t)
-    game.Players.LocalPlayer.Character.Humanoid.JumpPower = t
+    game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = t
     getgenv().GJumpPower = t
 end)
 
@@ -245,7 +245,7 @@ Misc:Toggle("Auto Pick Up",function(t)
     spawn(function()
         while getgenv().autoPickUpPicking == true and wait() do
             for _, v in pairs(workspace.Items:GetChildren()) do
-                if v ~= nil and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 20 then
+                if v ~= nil and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 20 then
                     game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
                 end
             end
@@ -329,6 +329,40 @@ Misc:Textbox("Auto Drop Key", true, function(t)
         {OutlineColor = getgenv().notifColor,Time = 3, Type = "default"}
     )
 end)
+getgenv().EatItem = nil
+getgenv().HungerCheck = false
+getgenv().Hunger = nil
+getgenv().EatUnderSlider = 80
+getgenv().EatUnder = getgenv().EatUnderSlider .. "%"
+Misc:Toggle("Auto Eat",function(t)
+    getgenv().HungerCheck = t
+    spawn(function()
+        while getgenv().HungerCheck == true and wait() do
+            getgenv().Hunger = game:GetService("Players").valensoysantijajaja.PlayerGui.MainGui.Panels.Toolbar.Stats.PlayerStats.Hunger.AmountLabel.Text
+            print(getgenv().Hunger)
+        end
+    end)
+    spawn(function()
+        while wait(1) and getgenv().HungerCheck == true do
+            if getgenv().Hunger <= getgenv().EatUnder and getgenv().EatItem ~= nil then
+                repeat
+                    game:GetService("ReplicatedStorage").Events.UseBagItem:FireServer(getgenv().EatItem)
+                    wait(0.15)
+                until getgenv().Hunger >= getgenv().EatUnder
+            end
+        end
+    end)
+end)
+Misc:Textbox("Auto Eat Item", true,function(t)
+    getgenv().EatItem = t
+    Notification:Notify(
+        {Title = "Auto Eat", Description = "Item set to ".. t},
+        {OutlineColor = getgenv().notifColor,Time = 3, Type = "default"}
+    )
+end)
+Misc:Slider("Auto Eat Hunger",1,100,80,function(t)
+    getgenv().EatUnderSlider = t
+end)
 getgenv().cCS = false
 Misc:Toggle("Color Changing Skin (Laggy on very bad pcs)", function(t)
     getgenv().cCS = t
@@ -366,7 +400,7 @@ Misc:Textbox("Craft Item", true, function(t)
 )
 end)
 Misc:Button("Craft Lvl 1000 Golden Boat (you have to be on water)", function()
-    local ohCFrame2 = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+    local ohCFrame2 = CFrame.new(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position.x, game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position.y, game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
     local ohNumber3 = 0
     game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Golden Sailboat", ohCFrame2, ohNumber3)
     Notification:Notify(
@@ -394,7 +428,7 @@ Misc:Dropdown("Shelly Teleports",{"Random Small Shelly", "Random Big Shelly", "R
     elseif t == "Random Giant Shelly" then
         shelly = "Giant Shelly"
     end
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Critters[shelly].Head.CFrame
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Critters[shelly].Head.CFrame
 end)
 Misc:Dropdown("Meteor Teleports",{"Crystal Meteor", "Magnetite Meteor"},function(t)
     if t == "Crystal Metor" then
@@ -402,17 +436,17 @@ Misc:Dropdown("Meteor Teleports",{"Crystal Meteor", "Magnetite Meteor"},function
     elseif t == "Magnetite Meteor" then
         meteor = "Meteor Core"
     end
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Resources[meteor]["Small Rock"].Reference.CFrame
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Resources[meteor]["Small Rock"].Reference.CFrame
 end)
 Misc:Dropdown("Ore and Other Teleports",{"Coal Node", "Iron Node", "Gold Node", "Stone Node", "Dead Tree", "Goober", "Beached Boi"},function(t)
     if t == "Beached Boi" then
-        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Resources[t].Tail.CFrame
+        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Resources[t].Tail.CFrame
     else
-        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Resources[t].Reference.CFrame
+        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Resources[t].Reference.CFrame
     end
 end)
 Misc:Dropdown("Deployable Teleports",{"Chest", "Plant Box"},function(t)
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Deployables[t].Reference.CFrame
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Deployables[t].Reference.CFrame
 end)
 Misc:Dropdown("Lobbys",{"Unused Lobby", "Lobby"},function(t)
     if t == "Unused Lobby" then
@@ -424,7 +458,7 @@ Misc:Dropdown("Lobbys",{"Unused Lobby", "Lobby"},function(t)
         coordinatesy = -3
         coordinatesz = -4144
     end
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character:MoveTo(Vector3.new(coordinatesx, coordinatesy, coordinatesz))
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Players").LocalPlayer.Character:MoveTo(Vector3.new(coordinatesx, coordinatesy, coordinatesz))
 end)
 Misc:Button("Infinity Yield", function()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
@@ -498,7 +532,7 @@ AutoFarm:Slider("Wait Time",0.1,15,1,function(t)
     getgenv().TimeBetweenEach = t
 end)
 AutoFarm:Label("For Auto Plant item don't write the plant name")
-AutoFarm:Label("Write the name of the item you use plant it")
+AutoFarm:Label("Write the name of the item you use to plant it")
 getgenv().autoPlantPlant = nil
 getgenv().planting = false
 AutoFarm:Toggle("Auto Plant",function(t)
@@ -506,7 +540,7 @@ AutoFarm:Toggle("Auto Plant",function(t)
     spawn(function()
         while getgenv().planting == true and wait() do
             for _, v in pairs(workspace.Deployables:GetChildren()) do
-                if v.Name == "Plant Box" and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 60 then
+                if v.Name == "Plant Box" and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 60 then
                     game.ReplicatedStorage.Events.InteractStructure:FireServer(v, getgenv().autoPlantPlant)
                 end
             end
@@ -551,7 +585,7 @@ local Building = s:Tab("Building")
 Building:Button("Place Chest Campfire (1 Chest, 4 Campfires)", function()
     local Fires = 1
     local Event = game:GetService("ReplicatedStorage").Events.PlaceStructure
-    h = game.Players.LocalPlayer.Character.LowerTorso.Position
+    h = game:GetService("Players").LocalPlayer.Character.LowerTorso.Position
     local c = h.x + 5
     local d = h.y - 2
     local e = h.z
@@ -599,14 +633,14 @@ Building:Button("Place Chest Campfire (1 Chest, 4 Campfires)", function()
     end
 end)
 Building:Button("Place Plant Box", function()
-    local ohCFrame2 = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+    local ohCFrame2 = CFrame.new(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position.x, game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
     local ohNumber3 = 0
     game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Plant Box", ohCFrame2, ohNumber3)
 end)
 Building:Button("Egg Farm (4 Nests, 2 Campfires)", function()
-    local ohCFrame2 = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+    local ohCFrame2 = CFrame.new(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position.x, game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
     local ohNumber3 = 0
-    local ohCFrame3 = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x + 2, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+    local ohCFrame3 = CFrame.new(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position.x + 2, game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
     game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Nest", ohCFrame2, ohNumber3)
     game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Nest", ohCFrame2, ohNumber3)
     game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Nest", ohCFrame2, ohNumber3)
