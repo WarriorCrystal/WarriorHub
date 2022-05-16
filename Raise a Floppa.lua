@@ -118,6 +118,12 @@ Collect:Toggle("Auto Collect Mushrooms",function(t)
                     firetouchinterest(game:GetService("Players").LocalPlayer.Character.Head, v.Handle, 1)
                 end
             end
+            for _, v in pairs(game:GetService("Workspace").Outside:GetChildren()) do
+                if v ~= nil and v.Name == "Mushroom" and v.Transparency == 0 then
+                    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
+                    fireproximityprompt(v.ForagePrompt)
+                end
+            end
         end
     end)
 end)
