@@ -484,10 +484,8 @@ getgenv().TimeBetweenEach = 1
 getgenv().farmingMineTarget = nil
 getgenv().farming = false
 getgenv().autoFarmTping = false
-AutoFarm:Toggle("Auto Farm",function(t)
-    getgenv().farming = t
-    getgenv().autoFarmTping = t
-    local shelly = "Stone Shelly"
+local shelly = "Stone Shelly"
+function farm()
     spawn(function()
         while getgenv().farming do
             local af2Table2 = {
@@ -503,16 +501,24 @@ AutoFarm:Toggle("Auto Farm",function(t)
             wait()
         end
     end)
+end
+function farmtp()
     spawn(function()
-    while getgenv().autoFarmTping do
-        if getgenv().FarmingObject == "Shelly" then
-            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace").Critters[shelly].Head.Position.x, game:GetService("Workspace").Critters[shelly].Head.Position.y + 3, game:GetService("Workspace").Critters[shelly].Head.Position.z)
-        else
-            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace").Resources[FarmingObject].Reference.Position.x, game:GetService("Workspace").Resources[FarmingObject].Reference.Position.y + 3, game:GetService("Workspace").Resources[FarmingObject].Reference.Position.z)
+        while getgenv().autoFarmTping do
+            if getgenv().FarmingObject == "Shelly" then
+                game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace").Critters[shelly].Head.Position.x, game:GetService("Workspace").Critters[shelly].Head.Position.y + 3, game:GetService("Workspace").Critters[shelly].Head.Position.z)
+            else
+                game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace").Resources[FarmingObject].Reference.Position.x, game:GetService("Workspace").Resources[FarmingObject].Reference.Position.y + 3, game:GetService("Workspace").Resources[FarmingObject].Reference.Position.z)
+            end
+            wait(getgenv().TimeBetweenEach)
         end
-        wait(getgenv().TimeBetweenEach)
-    end
     end)
+end
+AutoFarm:Toggle("Auto Farm",function(t)
+    getgenv().farming = t
+    getgenv().autoFarmTping = t
+    farm()
+    farmtp()
 end)
 AutoFarm:Dropdown("Target",{"Iron Node", "Coal Node", "Magnetite Iceberg", "Totem of the Moon", "Dead Tree", "Gold Node", "Stone Node", "Ancient Tree", "Ancient Feather Tree", "Shelly"},function(t)
     getgenv().FarmingObject = t
