@@ -23,7 +23,7 @@ Main:Colorpicker("Notification Color",Color3.fromRGB(80, 80, 80),function(t)
 end)
 Main:Button("Credits",function()
     Notification:Notify(
-        {Title = "Credits", Description = "Vinyxu for Discord Prompt, BocusLuke for Notifications, Onyx Hub, Booga Bitches and me lol"},
+        {Title = "Credits", Description = "Vinyxu for Discord Prompt, BocusLuke for Notifications, Booga Bitches, Engo/Future and me lol"},
         {OutlineColor = getgenv().notifColor,Time = 5, Type = "default"}
     )
 end)
@@ -34,11 +34,24 @@ end)
 
 local Combat = s:Tab("Combat")
 getgenv().killing = false
+--thx to engo future for isAlive and canBeTargeted functions :) i'm too lazy to make something like this lol
+function isAlive(plr)
+    local plr = plr or game:GetService("Players").LocalPlayer
+    if plr and plr.Character and ((plr.Character:FindFirstChild("Humanoid")) and (plr.Character:FindFirstChild("Humanoid") and plr.Character:FindFirstChild("Humanoid").Health > 0) and (plr.Character:FindFirstChild("HumanoidRootPart")) and (plr.Character:FindFirstChild("Head"))) then
+        return true
+    end
+end
+function canBeTargeted(plr, doTeamCheck) 
+    if isAlive(plr) and plr ~= game:GetService("Players").LocalPlayer and (doTeamCheck and plr.Team ~= game:GetService("Players").LocalPlayer.Team or not doTeamCheck) and plr.Name ~= "valensoysantijajaja" and plr.Name ~= "SusLordCV" then 
+        return true
+    end
+    return false
+end
 function useAura()
     spawn(function()
         while getgenv().killing == true and wait(0.1) do
             for i, v in pairs(game:GetService("Players"):GetPlayers()) do
-                if v ~= nil and v.Character.Humanoid.Health ~= 0 and v ~= game:GetService("Players").LocalPlayer and v.Name ~= "valensoysantijajaja" and v.Name ~= "SusLordCV" and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).magnitude < 20 then
+                if isAlive() and canBeTargeted(v, false) and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).magnitude < 20 then
                     local rTV = game:GetService("ReplicatedStorage").RelativeTime.Value
                     local attackTable = {
                         [1] = game:GetService("Workspace").Characters[v.Name].LeftUpperLeg,
