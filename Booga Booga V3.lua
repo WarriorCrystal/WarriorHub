@@ -151,27 +151,31 @@ end)
 
 
 local Movement = s:Tab("Movement")
+getgenv().speedState = false
 getgenv().speed = 3
 getgenv().speedkey = "x"
 getgenv().loop2 = false
-Movement:Button("Speed (Hold)",function()
-    local plr = game:GetService("Players").LocalPlayer
-    local char = plr.Character
-    local mouse = game:GetService("Players").LocalPlayer:GetMouse()
-    local hum = char:FindFirstChild("HumanoidRootPart")
-    mouse.KeyDown:connect(function(key)
-        if key == getgenv().speedkey:lower() then
-            getgenv().loop2 = true
-            while getgenv().loop2 do
-                hum.CFrame = hum.CFrame + hum.CFrame.lookVector * getgenv().speed
-                wait()
+Movement:Toggle("Speed (Hold Key)",function(t)
+    getgenv().speedState = t
+    spawn(function()
+        local plr = game:GetService("Players").LocalPlayer
+        local char = plr.Character
+        local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+        local hum = char:FindFirstChild("HumanoidRootPart")
+        mouse.KeyDown:connect(function(key)
+            if key == getgenv().speedkey:lower() and getgenv().speedState then
+                getgenv().loop2 = true
+                while getgenv().loop2 do
+                    hum.CFrame = hum.CFrame + hum.CFrame.lookVector * getgenv().speed
+                    wait()
+                end
             end
-        end
-    end)
-    mouse.KeyUp:connect(function(key)
-        if key == getgenv().speedkey:lower() then
-            getgenv().loop2 = false
-        end
+        end)
+        mouse.KeyUp:connect(function(key)
+            if key == getgenv().speedkey:lower() then
+                getgenv().loop2 = false
+            end
+        end)
     end)
 end)
 Movement:Slider("Speed Multiplier",0,100,3,function(t)
@@ -213,23 +217,27 @@ end)
 local Misc = s:Tab("Misc")
 getgenv().abKey = "v"
 getgenv().breaking = false
-Misc:Button("Auto Break (Aim and Hold)", function()
-    local mouse = game:GetService("Players").LocalPlayer:GetMouse()
-    mouse.KeyDown:connect(function(key)
-        if key == getgenv().abKey then
-            getgenv().breaking = true
-            while getgenv().breaking and wait(0.01) do
-                local part = game:GetService("Players").LocalPlayer:GetMouse().Target
-                local one = game:GetService("ReplicatedStorage").RelativeTime.Value
-                local two = {part,part,part,part}
-                game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(one, two)
+getgenv().abState = false
+Misc:Toggle("Auto Break (Aim and Hold Key)",function(t)
+    getgenv().abState = t
+    spawn(function()
+        local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+        mouse.KeyDown:connect(function(key)
+            if key == getgenv().abKey and getgenv().abState then
+                getgenv().breaking = true
+                while getgenv().breaking and wait(0.01) do
+                    local part = game:GetService("Players").LocalPlayer:GetMouse().Target
+                    local one = game:GetService("ReplicatedStorage").RelativeTime.Value
+                    local two = {part,part,part,part}
+                    game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(one, two)
+                end
             end
-        end
-    end)
-    mouse.KeyUp:connect(function(key)
-        if key == getgenv().abKey then
-            getgenv().breaking = false
-        end
+        end)
+        mouse.KeyUp:connect(function(key)
+            if key == getgenv().abKey then
+                getgenv().breaking = false
+            end
+        end)
     end)
 end)
 Misc:Textbox("Auto Break Key", true,function(t)
@@ -244,7 +252,7 @@ Misc:Toggle("Auto Pick Up",function(t)
     getgenv().autoPickUpPicking = t
     spawn(function()
         while getgenv().autoPickUpPicking == true and wait() do
-            for _, v in pairs(workspace.Items:GetChildren()) do
+            for _, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
                 if v ~= nil and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 20 then
                     game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
                 end
@@ -298,21 +306,25 @@ end)
 getgenv().adItem = nil
 getgenv().adKey = "f"
 getgenv().dropping = false
-Misc:Button("Auto Drop (Hold)", function()
-    local mouse = game:GetService("Players").LocalPlayer:GetMouse()
-    mouse.KeyDown:connect(function(key)
-        if key == getgenv().adKey then
-            getgenv().dropping = true
-            while getgenv().dropping and wait() do
-                local asd = getgenv().adItem
-                game:GetService("ReplicatedStorage").Events.DropBagItem:FireServer(asd)
+getgenv().autoDropState = false
+Misc:Toggle("Auto Drop (Hold Key)",function(t)
+    getgenv().autoDropState = t
+    spawn(function()
+        local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+        mouse.KeyDown:connect(function(key)
+            if key == getgenv().adKey and getgenv().autoDropState then
+                getgenv().dropping = true
+                while getgenv().dropping and wait() do
+                    local asd = getgenv().adItem
+                    game:GetService("ReplicatedStorage").Events.DropBagItem:FireServer(asd)
+                end
             end
-        end
-    end)
-    mouse.KeyUp:connect(function(key)
-        if key == getgenv().adKey then
-            getgenv().dropping = false
-        end
+        end)
+        mouse.KeyUp:connect(function(key)
+            if key == getgenv().adKey then
+                getgenv().dropping = false
+            end
+        end)
     end)
 end)
 Misc:Textbox("Auto Drop Item", true, function(t)
@@ -428,7 +440,7 @@ Misc:Dropdown("Shelly Teleports",{"Random Small Shelly", "Random Big Shelly", "R
     elseif t == "Random Giant Shelly" then
         shelly = "Giant Shelly"
     end
-    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Critters[shelly].Head.CFrame
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Critters[shelly].Head.CFrame
 end)
 Misc:Dropdown("Meteor Teleports",{"Crystal Meteor", "Magnetite Meteor"},function(t)
     if t == "Crystal Metor" then
@@ -436,17 +448,17 @@ Misc:Dropdown("Meteor Teleports",{"Crystal Meteor", "Magnetite Meteor"},function
     elseif t == "Magnetite Meteor" then
         meteor = "Meteor Core"
     end
-    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Resources[meteor]["Small Rock"].Reference.CFrame
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Resources[meteor]["Small Rock"].Reference.CFrame
 end)
 Misc:Dropdown("Ore and Other Teleports",{"Coal Node", "Iron Node", "Gold Node", "Stone Node", "Dead Tree", "Goober", "Beached Boi"},function(t)
     if t == "Beached Boi" then
-        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Resources[t].Tail.CFrame
+        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Resources[t].Tail.CFrame
     else
-        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Resources[t].Reference.CFrame
+        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Resources[t].Reference.CFrame
     end
 end)
 Misc:Dropdown("Deployable Teleports",{"Chest", "Plant Box"},function(t)
-    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Deployables[t].Reference.CFrame
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Deployables[t].Reference.CFrame
 end)
 Misc:Dropdown("Lobbys",{"Unused Lobby", "Lobby"},function(t)
     if t == "Unused Lobby" then
@@ -493,9 +505,9 @@ function farm()
             }
             local af2Number1 = game:GetService("ReplicatedStorage").RelativeTime.Value
             if FarmingObject == "Shelly" then
-                getgenv().farmingMineTarget = game.Workspace.Critters[shelly].Head
+                getgenv().farmingMineTarget = game:GetService("Workspace").Critters[shelly].Head
             else
-                getgenv().farmingMineTarget = game.Workspace.Resources[getgenv().FarmingObject].Reference
+                getgenv().farmingMineTarget = game:GetService("Workspace").Resources[getgenv().FarmingObject].Reference
             end
             game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(af2Number1, af2Table2)
             wait()
@@ -545,7 +557,7 @@ AutoFarm:Toggle("Auto Plant",function(t)
     getgenv().planting = t
     spawn(function()
         while getgenv().planting == true and wait() do
-            for _, v in pairs(workspace.Deployables:GetChildren()) do
+            for _, v in pairs(game:GetService("Workspace").Deployables:GetChildren()) do
                 if v.Name == "Plant Box" and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 60 then
                     game.ReplicatedStorage.Events.InteractStructure:FireServer(v, getgenv().autoPlantPlant)
                 end
@@ -568,7 +580,7 @@ end)
 local Render = s:Tab("Render")
 Render:Button("Remove Rain", function()
     if workspace:FindFirstChild('RainPart') ~= nil then
-        workspace.RainPart:Destroy()
+        game:GetService("Workspace").RainPart:Destroy()
         game.ReplicatedStorage.Sounds.Nature.Rain:Stop()
         game.ReplicatedStorage.Sounds.Nature.Thunder:Stop()
         game.Lighting.Rain:Destroy()
