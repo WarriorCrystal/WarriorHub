@@ -35,19 +35,19 @@ end)
 local Combat = s:Tab("Combat")
 getgenv().killing = false
 --thx to engo future for isAlive and canBeTargeted functions :) i'm too lazy to make something like this lol
-function isAlive(plr)
+local function isAlive(plr)
     local plr = plr or game:GetService("Players").LocalPlayer
     if plr and plr.Character and ((plr.Character:FindFirstChild("Humanoid")) and (plr.Character:FindFirstChild("Humanoid") and plr.Character:FindFirstChild("Humanoid").Health > 0) and (plr.Character:FindFirstChild("HumanoidRootPart")) and (plr.Character:FindFirstChild("Head"))) then
         return true
     end
 end
-function canBeTargeted(plr, doTeamCheck) 
+local function canBeTargeted(plr, doTeamCheck) 
     if isAlive(plr) and plr ~= game:GetService("Players").LocalPlayer and (doTeamCheck and plr.Team ~= game:GetService("Players").LocalPlayer.Team or not doTeamCheck) and plr.Name ~= "valensoysantijajaja" and plr.Name ~= "SusLordCV" then 
         return true
     end
     return false
 end
-function useAura()
+local function useAura()
     spawn(function()
         while getgenv().killing == true and wait(0.1) do
             for i, v in pairs(game:GetService("Players"):GetPlayers()) do
@@ -123,7 +123,7 @@ Combat:Textbox("Normal TP", true,function(t)
                 )
                 return
             else
-                player = game:GetService("Players").LocalPlayer.Character
+                local player = game:GetService("Players").LocalPlayer.Character
                 player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y, v.Character.HumanoidRootPart.Position.z)
             end
         end
@@ -132,14 +132,15 @@ end)
 getgenv().HealItem = nil
 getgenv().HealthCheck = false
 getgenv().Health = nil
-Combat:Toggle("Auto Heal",function(t)
-    getgenv().HealthCheck = t
+local function checkHealth()
     spawn(function()
         while getgenv().HealthCheck == true and wait() do
             getgenv().Health = game:GetService("Players").LocalPlayer.Character.Humanoid.Health
             --print(Health)
         end
     end)
+end
+local function heal()
     spawn(function()
         while wait(1) and getgenv().HealthCheck == true do
             if getgenv().Health ~= 100 and getgenv().HealItem ~= nil then
@@ -150,6 +151,11 @@ Combat:Toggle("Auto Heal",function(t)
             end
         end
     end)
+end
+Combat:Toggle("Auto Heal",function(t)
+    getgenv().HealthCheck = t
+    checkHealth()
+    heal()
 end)
 Combat:Textbox("Auto Heal Item", true,function(t)
     getgenv().HealItem = t
@@ -205,7 +211,7 @@ getgenv().GJumpPower = 50
 Movement:Button("Infinity Jump",function()
     local Player = game:GetService'Players'.LocalPlayer;
     local UIS = game:GetService'UserInputService';
-    function Action(Object, Function) if Object ~= nil then Function(Object); end end
+    local function Action(Object, Function) if Object ~= nil then Function(Object); end end
     UIS.InputBegan:connect(function(UserInput)
         if UserInput.UserInputType == Enum.UserInputType.Keyboard and UserInput.KeyCode == Enum.KeyCode.Space then
             Action(Player.Character.Humanoid, function(self)
@@ -261,17 +267,20 @@ Misc:Textbox("Auto Break Key", true,function(t)
     )
 end)
 getgenv().autoPickUpPicking = false
-Misc:Toggle("Auto Pick Up",function(t)
-    getgenv().autoPickUpPicking = t
+local function useAutoPickUp()
     spawn(function()
         while getgenv().autoPickUpPicking == true and wait() do
             for _, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
-                if v ~= nil and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 20 then
+                if v ~= nil and v.PrimaryPart ~= nil and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 20 then
                     game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
                 end
             end
         end
     end)
+end
+Misc:Toggle("Auto Pick Up",function(t)
+    getgenv().autoPickUpPicking = t
+    useAutoPickUp()
 end)
 getgenv().autoTPPUItem = nil
 getgenv().autoTPPickUpMode = "Item Select"
@@ -359,14 +368,14 @@ getgenv().HungerCheck = false
 getgenv().Hunger = nil
 getgenv().EatUnderSlider = 80
 getgenv().EatUnder = getgenv().EatUnderSlider .. "%"
-Misc:Toggle("Auto Eat",function(t)
-    getgenv().HungerCheck = t
+local function checkHunger()
     spawn(function()
         while getgenv().HungerCheck == true and wait() do
             getgenv().Hunger = game:GetService("Players").LocalPlayer.PlayerGui.MainGui.Panels.Toolbar.Stats.PlayerStats.Hunger.AmountLabel.Text
-            print(getgenv().Hunger)
         end
     end)
+end
+local function eat()
     spawn(function()
         while wait(1) and getgenv().HungerCheck == true do
             if getgenv().Hunger <= getgenv().EatUnder and getgenv().EatItem ~= nil then
@@ -377,6 +386,11 @@ Misc:Toggle("Auto Eat",function(t)
             end
         end
     end)
+end
+Misc:Toggle("Auto Eat",function(t)
+    getgenv().HungerCheck = t
+    checkHunger()
+    eat()
 end)
 Misc:Textbox("Auto Eat Item", true,function(t)
     getgenv().EatItem = t
@@ -461,17 +475,17 @@ Misc:Dropdown("Meteor Teleports",{"Crystal Meteor", "Magnetite Meteor"},function
     elseif t == "Magnetite Meteor" then
         meteor = "Meteor Core"
     end
-    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Resources[meteor]["Small Rock"].Reference.CFrame
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Resources[meteor]["Small Rock"].PrimaryPart.CFrame
 end)
 Misc:Dropdown("Ore and Other Teleports",{"Coal Node", "Iron Node", "Gold Node", "Stone Node", "Dead Tree", "Goober", "Beached Boi"},function(t)
     if t == "Beached Boi" then
         game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Resources[t].Tail.CFrame
     else
-        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Resources[t].Reference.CFrame
+        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Resources[t].PrimaryPart.CFrame
     end
 end)
 Misc:Dropdown("Deployable Teleports",{"Chest", "Plant Box"},function(t)
-    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Deployables[t].Reference.CFrame
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Deployables[t].PrimaryPart.CFrame
 end)
 Misc:Dropdown("Lobbys",{"Unused Lobby", "Lobby"},function(t)
     if t == "Unused Lobby" then
@@ -510,7 +524,7 @@ getgenv().farmingMineTarget = nil
 getgenv().farming = false
 getgenv().autoFarmTping = false
 local shelly = "Stone Shelly"
-function farm()
+local function farm()
     spawn(function()
         while getgenv().farming do
             local af2Table2 = {
@@ -520,20 +534,20 @@ function farm()
             if FarmingObject == "Shelly" then
                 getgenv().farmingMineTarget = game:GetService("Workspace").Critters[shelly].Head
             else
-                getgenv().farmingMineTarget = game:GetService("Workspace").Resources[getgenv().FarmingObject].Reference
+                getgenv().farmingMineTarget = game:GetService("Workspace").Resources[getgenv().FarmingObject].PrimaryPart
             end
             game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(af2Number1, af2Table2)
             wait()
         end
     end)
 end
-function farmtp()
+local function farmtp()
     spawn(function()
         while getgenv().autoFarmTping do
             if getgenv().FarmingObject == "Shelly" then
                 game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace").Critters[shelly].Head.Position.x, game:GetService("Workspace").Critters[shelly].Head.Position.y + 3, game:GetService("Workspace").Critters[shelly].Head.Position.z)
             else
-                game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace").Resources[FarmingObject].Reference.Position.x, game:GetService("Workspace").Resources[FarmingObject].Reference.Position.y + 3, game:GetService("Workspace").Resources[FarmingObject].Reference.Position.z)
+                game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace").Resources[FarmingObject].PrimaryPart.Position.x, game:GetService("Workspace").Resources[FarmingObject].PrimaryPart.Position.y + 3, game:GetService("Workspace").Resources[FarmingObject].PrimaryPart.Position.z)
             end
             wait(getgenv().TimeBetweenEach)
         end
