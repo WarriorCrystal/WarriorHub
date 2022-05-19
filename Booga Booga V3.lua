@@ -475,7 +475,7 @@ Misc:Dropdown("Meteor Teleports",{"Crystal Meteor", "Magnetite Meteor"},function
     elseif t == "Magnetite Meteor" then
         meteor = "Meteor Core"
     end
-    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Resources[meteor]["Small Rock"].PrimaryPart.CFrame
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Resources[meteor].PrimaryPart.CFrame
 end)
 Misc:Dropdown("Ore and Other Teleports",{"Coal Node", "Iron Node", "Gold Node", "Stone Node", "Dead Tree", "Goober", "Beached Boi"},function(t)
     if t == "Beached Boi" then
