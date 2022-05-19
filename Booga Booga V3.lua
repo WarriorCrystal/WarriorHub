@@ -73,7 +73,7 @@ getgenv().tping = false
 Combat:Toggle("Teleport Spam",function(t)
     getgenv().tping = t
     spawn(function()
-        while getgenv().tping and wait() do
+        while getgenv().tping and wait(0.1) do
             for i,v in pairs(game:GetService("Players"):GetChildren()) do
                 if v.Name:lower():find(getgenv().tpspamv:lower()) then
                     if v.Name == "SusLordCv" or v.Name == "valensoysantijajaja" then
@@ -89,18 +89,18 @@ Combat:Toggle("Teleport Spam",function(t)
                         player = game:GetService("Players").LocalPlayer.Character
                         player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y + getgenv().tpupval, v.Character.HumanoidRootPart.Position.z)
                     elseif getgenv().tpspammode == "Down" then
-                        player = game:GetService("Players").LocalPlayer.Character
+                        player = game:GetService("Players").LocalPlayer.Characterxx
                         player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y - getgenv().tpupval, v.Character.HumanoidRootPart.Position.z)
-                    elseif getgenv().tpspammode == "Around" then
+                    elseif getgenv().tpspammode == "Around (Best)" then
                         player = game:GetService("Players").LocalPlayer.Character
-                        player.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * CFrame.new(v.Character.HumanoidRootPart.CFrame.lookVector * getgenv().tpupval)
+                        player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x + math.random(-7, 7), v.Character.HumanoidRootPart.Position.y, v.Character.HumanoidRootPart.Position.z + math.random(-7, 7))
                     end
                 end
             end
         end
     end)
 end)
-Combat:Dropdown("TP Spam Mode",{"Normal", "Up", "Down", "Around"},function(t)
+Combat:Dropdown("TP Spam Mode",{"Around (Best)", "Up", "Down", "Normal"},function(t)
     getgenv().tpspammode = t
 end)
 Combat:Slider("TP Spam distance (use a fly script or you may die)", 0,10,0, function(t)
@@ -523,19 +523,15 @@ getgenv().TimeBetweenEach = 1
 getgenv().farmingMineTarget = nil
 getgenv().farming = false
 getgenv().autoFarmTping = false
-local shelly = "Stone Shelly"
+getgenv().farmingMode = "Resources"
 local function farm()
     spawn(function()
         while getgenv().farming do
+            getgenv().farmingMineTarget = game:GetService("Workspace")[getgenv().farmingMode][getgenv().FarmingObject].PrimaryPart
             local af2Table2 = {
                 [1] = getgenv().farmingMineTarget
             }
             local af2Number1 = game:GetService("ReplicatedStorage").RelativeTime.Value
-            if FarmingObject == "Shelly" then
-                getgenv().farmingMineTarget = game:GetService("Workspace").Critters[shelly].Head
-            else
-                getgenv().farmingMineTarget = game:GetService("Workspace").Resources[getgenv().FarmingObject].PrimaryPart
-            end
             game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(af2Number1, af2Table2)
             wait()
         end
@@ -544,11 +540,7 @@ end
 local function farmtp()
     spawn(function()
         while getgenv().autoFarmTping do
-            if getgenv().FarmingObject == "Shelly" then
-                game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace").Critters[shelly].Head.Position.x, game:GetService("Workspace").Critters[shelly].Head.Position.y + 3, game:GetService("Workspace").Critters[shelly].Head.Position.z)
-            else
-                game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace").Resources[FarmingObject].PrimaryPart.Position.x, game:GetService("Workspace").Resources[FarmingObject].PrimaryPart.Position.y + 3, game:GetService("Workspace").Resources[FarmingObject].PrimaryPart.Position.z)
-            end
+            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace")[getgenv().farmingMode][getgenv().FarmingObject].PrimaryPart.Position.x, game:GetService("Workspace")[getgenv().farmingMode][getgenv().FarmingObject].PrimaryPart.Position.y + 3, game:GetService("Workspace")[getgenv().farmingMode][getgenv().FarmingObject].PrimaryPart.Position.z)
             wait(getgenv().TimeBetweenEach)
         end
     end)
@@ -559,7 +551,10 @@ AutoFarm:Toggle("Auto Farm",function(t)
     farm()
     farmtp()
 end)
-AutoFarm:Dropdown("Target",{"Iron Node", "Coal Node", "Magnetite Iceberg", "Totem of the Moon", "Dead Tree", "Gold Node", "Stone Node", "Ancient Tree", "Ancient Feather Tree", "Shelly"},function(t)
+AutoFarm:Dropdown("Mode",{"Resources", "Critters", "Deployables"},function(t)
+    getgenv().farmingMode = t
+end)
+AutoFarm:Dropdown("Target",{"Iron Node", "Coal Node", "Magnetite Iceberg", "Totem of the Moon", "Dead Tree", "Gold Node", "Stone Node", "Ancient Tree", "Ancient Feather Tree", "Stone Shelly"},function(t)
     getgenv().FarmingObject = t
     Notification:Notify(
     {Title = "Auto Farm", Description = "Target set to ".. t},
