@@ -269,12 +269,13 @@ end)
 getgenv().autoPickUpPicking = false
 local function useAutoPickUp()
     spawn(function()
-        while getgenv().autoPickUpPicking == true and wait() do
+        while getgenv().autoPickUpPicking == true do
             for _, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
                 if v ~= nil and v.PrimaryPart ~= nil and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 20 then
                     game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
                 end
             end
+            game:GetService("RunService").RenderStepped:wait()
         end
     end)
 end
