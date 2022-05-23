@@ -89,7 +89,7 @@ Combat:Toggle("Teleport Spam",function(t)
                         player = game:GetService("Players").LocalPlayer.Character
                         player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y + getgenv().tpupval, v.Character.HumanoidRootPart.Position.z)
                     elseif getgenv().tpspammode == "Down" then
-                        player = game:GetService("Players").LocalPlayer.Characterxx
+                        player = game:GetService("Players").LocalPlayer.Character
                         player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y - getgenv().tpupval, v.Character.HumanoidRootPart.Position.z)
                     elseif getgenv().tpspammode == "Around (Best)" then
                         player = game:GetService("Players").LocalPlayer.Character
@@ -97,13 +97,21 @@ Combat:Toggle("Teleport Spam",function(t)
                     end
                 end
             end
+            if getgenv().tping then 
+                game:GetService("Workspace").Gravity = 0
+                game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = 0
+            end
+            if not getgenv().tping then 
+                game:GetService("Workspace").Gravity = 196.2
+                game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = getgenv().GJumpPower
+            end
         end
     end)
 end)
 Combat:Dropdown("TP Spam Mode",{"Around (Best)", "Up", "Down", "Normal"},function(t)
     getgenv().tpspammode = t
 end)
-Combat:Slider("TP Spam distance (use a fly script or you may die)", 0,10,0, function(t)
+Combat:Slider("TP Spam Distance", 0,10,0, function(t)
     getgenv().tpupval = t
 end)
 Combat:Textbox("TP Spam Name",true, function(t)
@@ -313,6 +321,14 @@ Misc:Toggle("Auto TP Pick Up",function(t)
                     end
                 end
             end
+        end
+        if getgenv().autoTPPickUp then 
+            game:GetService("Workspace").Gravity = 0
+            game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = 0
+        end
+        if not getgenv().autoTPPickUp then 
+            game:GetService("Workspace").Gravity = 196.2
+            game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = getgenv().GJumpPower
         end
     end)
 end)
@@ -543,6 +559,14 @@ local function farmtp()
         while getgenv().autoFarmTping do
             game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace")[getgenv().farmingMode][getgenv().FarmingObject].PrimaryPart.Position.x, game:GetService("Workspace")[getgenv().farmingMode][getgenv().FarmingObject].PrimaryPart.Position.y + 3, game:GetService("Workspace")[getgenv().farmingMode][getgenv().FarmingObject].PrimaryPart.Position.z)
             wait(getgenv().TimeBetweenEach)
+            if getgenv().autoFarmTping then 
+                game:GetService("Workspace").Gravity = 0
+                game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = 0
+            end
+            if not getgenv().autoFarmTping then 
+                game:GetService("Workspace").Gravity = 196.2
+                game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = getgenv().GJumpPower
+            end
         end
     end)
 end
