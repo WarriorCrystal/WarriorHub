@@ -2,7 +2,7 @@ local VLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/vep1032/
 local NotificationHolder = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Module.Lua"))()
 local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Client.Lua"))()
 local inviteModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Discord%20Inviter/Source.lua"))()
-local s = VLib:Window("Warrior Hub", "Booga Booga", "W")
+local s = VLib:Window("Warrior Hub", "Booga Classic", "W")
 getgenv().notifColor = Color3.fromRGB(80, 80, 80)
 
 
@@ -235,6 +235,9 @@ end)
 Movement:Slider("Jump Power", 0,300,50, function(t)
     game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = t
     getgenv().GJumpPower = t
+end)
+Movement:Button("Fly (E to toggle)", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/PhoenixAceVFX/Roblox-Scripts/master/FE%20Fly.lua", true))()
 end)
 
 
