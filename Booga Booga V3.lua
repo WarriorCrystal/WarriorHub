@@ -562,14 +562,6 @@ local function farmtp()
         while getgenv().autoFarmTping do
             game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace")[getgenv().farmingMode][getgenv().FarmingObject].PrimaryPart.Position.x, game:GetService("Workspace")[getgenv().farmingMode][getgenv().FarmingObject].PrimaryPart.Position.y + 3, game:GetService("Workspace")[getgenv().farmingMode][getgenv().FarmingObject].PrimaryPart.Position.z)
             wait(getgenv().TimeBetweenEach)
-            if getgenv().autoFarmTping then 
-                game:GetService("Workspace").Gravity = 0
-                game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = 0
-            end
-            if not getgenv().autoFarmTping then 
-                game:GetService("Workspace").Gravity = 196.2
-                game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = getgenv().GJumpPower
-            end
         end
     end)
 end
@@ -578,6 +570,14 @@ AutoFarm:Toggle("Auto Farm",function(t)
     getgenv().autoFarmTping = t
     farm()
     farmtp()
+    if getgenv().farming then 
+        game:GetService("Workspace").Gravity = 0
+        game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = 0
+    end
+    if not getgenv().farming then 
+        game:GetService("Workspace").Gravity = 196.2
+        game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = getgenv().GJumpPower
+    end
 end)
 AutoFarm:Dropdown("Mode",{"Resources", "Critters", "Deployables"},function(t)
     getgenv().farmingMode = t
