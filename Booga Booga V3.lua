@@ -237,7 +237,7 @@ Movement:Slider("Jump Power", 0,300,50, function(t)
     getgenv().GJumpPower = t
 end)
 Movement:Button("Fly (E to toggle)", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/PhoenixAceVFX/Roblox-Scripts/master/FE%20Fly.lua", true))()
+    loadstring(game:HttpGet("https://pastebin.com/raw/9tZMx4SW"))()
 end)
 
 
