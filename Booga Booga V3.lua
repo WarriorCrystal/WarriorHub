@@ -49,17 +49,19 @@ local function canBeTargeted(plr, doTeamCheck)
 end
 local function useAura()
     spawn(function()
-        while getgenv().killing == true and wait(0.1) do
-            for i, v in pairs(game:GetService("Players"):GetPlayers()) do
-                if isAlive() and canBeTargeted(v, false) and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).magnitude < 20 then
-                    local rTV = game:GetService("ReplicatedStorage").RelativeTime.Value
-                    local attackTable = {
-                        [1] = game:GetService("Workspace").Characters[v.Name].LeftUpperLeg,
-                    }
-                    game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(rTV, attackTable)
+        game:GetService("RunService").RenderStepped:Connect(function()
+            if getgenv().killing then
+                for i, v in pairs(game:GetService("Players"):GetPlayers()) do
+                    if isAlive() and canBeTargeted(v, false) and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).magnitude < 20 then
+                        local rTV = game:GetService("ReplicatedStorage").RelativeTime.Value
+                        local attackTable = {
+                            [1] = game:GetService("Workspace").Characters[v.Name].LeftUpperLeg,
+                        }
+                        game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(rTV, attackTable)
+                    end
                 end
             end
-        end
+        end)
     end)
 end
 Combat:Toggle("Kill Aura",function(t)
@@ -72,40 +74,39 @@ getgenv().tpspammode = "Normal"
 getgenv().tping = false
 Combat:Toggle("Teleport Spam",function(t)
     getgenv().tping = t
+    local player = game:GetService("Players").LocalPlayer.Character
+    if getgenv().tping then 
+        game:GetService("Workspace").Gravity = 0
+        game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = 0
+    end
+    if not getgenv().tping then 
+        game:GetService("Workspace").Gravity = 196.2
+        game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = getgenv().GJumpPower
+    end
     spawn(function()
-        while getgenv().tping and wait(0.1) do
-            for i,v in pairs(game:GetService("Players"):GetChildren()) do
-                if v.Name:lower():find(getgenv().tpspamv:lower()) then
-                    if v.Name == "SusLordCv" or v.Name == "valensoysantijajaja" then
-                        Notification:Notify(
-                            {Title = "TP Spam", Description = "You cant't kill this person"},
-                            {OutlineColor = getgenv().notifColor,Time = 3, Type = "default"}
-                        )
-                        return
-                    elseif getgenv().tpspammode == "Normal" then
-                        player = game:GetService("Players").LocalPlayer.Character
-                        player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y, v.Character.HumanoidRootPart.Position.z)
-                    elseif getgenv().tpspammode == "Up" then
-                        player = game:GetService("Players").LocalPlayer.Character
-                        player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y + getgenv().tpupval, v.Character.HumanoidRootPart.Position.z)
-                    elseif getgenv().tpspammode == "Down" then
-                        player = game:GetService("Players").LocalPlayer.Character
-                        player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y - getgenv().tpupval, v.Character.HumanoidRootPart.Position.z)
-                    elseif getgenv().tpspammode == "Around (Best)" then
-                        player = game:GetService("Players").LocalPlayer.Character
-                        player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x + math.random(-7, 7), v.Character.HumanoidRootPart.Position.y, v.Character.HumanoidRootPart.Position.z + math.random(-7, 7))
+        game:GetService("RunService").RenderStepped:Connect(function()
+            if getgenv().tping then
+                for i,v in pairs(game:GetService("Players"):GetChildren()) do
+                    if v.Name:lower():find(getgenv().tpspamv:lower()) then
+                        if v.Name == "SusLordCv" or v.Name == "valensoysantijajaja" then
+                            Notification:Notify(
+                                {Title = "TP Spam", Description = "You cant't kill this person"},
+                                {OutlineColor = getgenv().notifColor,Time = 3, Type = "default"}
+                            )
+                            return
+                        elseif getgenv().tpspammode == "Normal" then
+                            player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y, v.Character.HumanoidRootPart.Position.z)
+                        elseif getgenv().tpspammode == "Up" then
+                            player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y + getgenv().tpupval, v.Character.HumanoidRootPart.Position.z)
+                        elseif getgenv().tpspammode == "Down" then
+                            player.HumanoidRootPart.CFrame = CFrame.new(v.Character.HumanoidRootPart.Position.x, v.Character.HumanoidRootPart.Position.y - getgenv().tpupval, v.Character.HumanoidRootPart.Position.z)
+                        elseif getgenv().tpspammode == "Around (Best)" then
+                            player:MoveTo(Vector3.new(v.Character.HumanoidRootPart.Position.x + math.random(-(getgenv().tpupval), getgenv().tpupval), v.Character.HumanoidRootPart.Position.y, v.Character.HumanoidRootPart.Position.z + math.random(-(getgenv().tpupval), getgenv().tpupval)))
+                        end
                     end
                 end
             end
-            if getgenv().tping then 
-                game:GetService("Workspace").Gravity = 0
-                game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = 0
-            end
-            if not getgenv().tping then 
-                game:GetService("Workspace").Gravity = 196.2
-                game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = getgenv().GJumpPower
-            end
-        end
+        end)
     end)
 end)
 Combat:Dropdown("TP Spam Mode",{"Around (Best)", "Up", "Down", "Normal"},function(t)
@@ -280,14 +281,16 @@ end)
 getgenv().autoPickUpPicking = false
 local function useAutoPickUp()
     spawn(function()
-        while getgenv().autoPickUpPicking == true do
-            for _, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
-                if v ~= nil and v.PrimaryPart ~= nil and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 20 then
-                    game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
+        game:GetService("RunService").RenderStepped:Connect(function()
+            if getgenv().autoPickUpPicking then
+                for _, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
+                    if v ~= nil and v.PrimaryPart ~= nil and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 20 then
+                        game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
+                    end
                 end
+                game:GetService("RunService").RenderStepped:wait()
             end
-            game:GetService("RunService").RenderStepped:wait()
-        end
+        end)
     end)
 end
 Misc:Toggle("Auto Pick Up",function(t)
@@ -715,4 +718,22 @@ Building:Button("Egg Farm (4 Nests, 2 Campfires)", function()
     game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Nest", ohCFrame2, ohNumber3)
     game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Campfire", ohCFrame2, ohNumber3)
     game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer("Campfire", ohCFrame3, ohNumber3)
+end)
+getgenv().totalTimes = 1
+getgenv().structure = nil
+Building:Dropdown("Structure",{"Plant Box", "Chest", "Campfire", "Coin Press", "Nest", "Lookout", "Fish Trap", "Dock", "Bridge"},function(t)
+    getgenv().structure = t
+end)
+Building:Slider("Times",1,100,1,function(t)
+    getgenv().totalTimes = t
+end)
+Building:Button("Place", function()
+    local times = 0
+    if getgenv().structure ~= nil then
+        repeat
+            local Pos = CFrame.new(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position.x, game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position.y - 3, game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position.z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+            game:GetService("ReplicatedStorage").Events.PlaceStructure:FireServer(getgenv().structure, Pos, 0)
+            times = times + 1
+        until times == getgenv().totalTimes
+    end
 end)
