@@ -550,10 +550,13 @@ getgenv().farmingMode = "Resources"
 local function farm()
     spawn(function()
         while getgenv().farming do
-            if getgenv().farmingMineTarget == nil or getgenv().FarmingObject == nil then
+            if getgenv().FarmingObject == nil then
                 return
             end
             getgenv().farmingMineTarget = game:GetService("Workspace")[getgenv().farmingMode][getgenv().FarmingObject].PrimaryPart
+            if getgenv().farmingMineTarget == nil then
+                return
+            end
             local af2Table2 = {
                 [1] = getgenv().farmingMineTarget
             }
@@ -566,7 +569,7 @@ end
 local function farmtp()
     spawn(function()
         while getgenv().autoFarmTping do
-            if getgenv().farmingMineTarget == nil or getgenv().FarmingObject == nil then
+            if getgenv().FarmingObject == nil then
                 return
             end
             game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace")[getgenv().farmingMode][getgenv().FarmingObject].PrimaryPart.Position.x, game:GetService("Workspace")[getgenv().farmingMode][getgenv().FarmingObject].PrimaryPart.Position.y + 3, game:GetService("Workspace")[getgenv().farmingMode][getgenv().FarmingObject].PrimaryPart.Position.z)
@@ -630,6 +633,23 @@ AutoFarm:Textbox("Auto Plant Item", true,function(t)
     {Title = "Auto Plant", Description = "Item set to ".. t},
     {OutlineColor = getgenv().notifColor,Time = 3, Type = "default"}
 )
+end)
+getgenv().coins = false
+getgenv().coinsMaterial = "Gold Bar"
+AutoFarm:Toggle("Auto Make Coins",function(t)
+    getgenv().coins = t
+    spawn(function()
+        while getgenv().coins and wait() do
+            for _, v in pairs(game:GetService("Workspace").Deployables:GetChildren()) do
+                if v.Name == "Coin Press" and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 60 then
+                    game.ReplicatedStorage.Events.InteractStructure:FireServer(v, getgenv().coinsMaterial)
+                end
+            end
+        end
+    end)
+end)
+AutoFarm:Dropdown("Material",{"Gold Bar", "Log", "Stick"},function(t)
+    getgenv().coinsMaterial = t
 end)
 
 
@@ -752,3 +772,4 @@ local Donators = s:Tab("Donators")
 Donators:Label("Special Thanks to all people on this list")
 Donators:Label("naruto10123n")
 Donators:Label("GalazyZane")
+Donators:Label("PepeeNob")
