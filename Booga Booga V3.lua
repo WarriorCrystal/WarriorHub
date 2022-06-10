@@ -426,7 +426,7 @@ Misc:Slider("Auto Eat Hunger",1,100,80,function(t)
     getgenv().EatUnderSlider = t
 end)
 getgenv().cCS = false
-Misc:Toggle("Color Changing Skin (Laggy on very bad pcs)", function(t)
+Misc:Toggle("Color Changing Skin", function(t)
     getgenv().cCS = t
     spawn(function()
         while getgenv().cCS and wait(0.3) do
@@ -550,6 +550,9 @@ getgenv().farmingMode = "Resources"
 local function farm()
     spawn(function()
         while getgenv().farming do
+            if getgenv().farmingMineTarget == nil or getgenv().FarmingObject == nil then
+                return
+            end
             getgenv().farmingMineTarget = game:GetService("Workspace")[getgenv().farmingMode][getgenv().FarmingObject].PrimaryPart
             local af2Table2 = {
                 [1] = getgenv().farmingMineTarget
@@ -563,6 +566,9 @@ end
 local function farmtp()
     spawn(function()
         while getgenv().autoFarmTping do
+            if getgenv().farmingMineTarget == nil or getgenv().FarmingObject == nil then
+                return
+            end
             game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace")[getgenv().farmingMode][getgenv().FarmingObject].PrimaryPart.Position.x, game:GetService("Workspace")[getgenv().farmingMode][getgenv().FarmingObject].PrimaryPart.Position.y + 3, game:GetService("Workspace")[getgenv().farmingMode][getgenv().FarmingObject].PrimaryPart.Position.z)
             wait(getgenv().TimeBetweenEach)
         end
@@ -588,9 +594,9 @@ end)
 AutoFarm:Dropdown("Target",{"Iron Node", "Coal Node", "Magnetite Iceberg", "Totem of the Moon", "Dead Tree", "Gold Node", "Stone Node", "Ancient Tree", "Ancient Feather Tree", "Stone Shelly"},function(t)
     getgenv().FarmingObject = t
     Notification:Notify(
-    {Title = "Auto Farm", Description = "Target set to ".. t},
-    {OutlineColor = getgenv().notifColor,Time = 3, Type = "default"}
-)
+        {Title = "Auto Farm", Description = "Target set to ".. t},
+        {OutlineColor = getgenv().notifColor,Time = 3, Type = "default"}
+    )
 end)
 AutoFarm:Textbox("Custom Target", true,function(t)
     getgenv().FarmingObject = t
@@ -599,7 +605,7 @@ AutoFarm:Textbox("Custom Target", true,function(t)
         {OutlineColor = getgenv().notifColor,Time = 3, Type = "default"}
     )
 end)
-AutoFarm:Slider("Wait Time",0.1,15,1,function(t)
+AutoFarm:Slider("TP Delay",0.1,15,1,function(t)
     getgenv().TimeBetweenEach = t
 end)
 AutoFarm:Label("For Auto Plant item don't write the plant name")
@@ -737,3 +743,11 @@ Building:Button("Place", function()
         until times == getgenv().totalTimes
     end
 end)
+
+
+--Donators
+
+
+local Donators = s:Tab("Donators")
+Donators:Label("Special Thanks to all people on this list")
+Donators:Label("naruto10123n")
