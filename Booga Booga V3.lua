@@ -22,7 +22,7 @@ end)
 Main:Button("Join Discord",function()
     inviteModule.Join("https://discord.gg/EdHhqP7TzZ")
 end)
-Main:Colorpicker("Notification Color",Color3.fromRGB(80, 80, 80),function(t)
+Main:Colorpicker("Notification Color",Color3.fromRGB(255, 0, 0),function(t)
     getgenv().notifColor = t
 end)
 Main:Button("Credits",function()
