@@ -240,7 +240,7 @@ Movement:Slider("Jump Power", 0,300,50, function(t)
     getgenv().GJumpPower = t
 end)
 Movement:Button("Fly", function()
-    loadstring(game:HttpGet("https://pastebin.com/ihaiAkdc"))()
+    loadstring(game:HttpGet("https://pastebin.com/raw/ihaiAkdc"))()
 end)
 Movement:Textbox("Fly Key", true,function(t)
     getgenv().flyKeybind = t
