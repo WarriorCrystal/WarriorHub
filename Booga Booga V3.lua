@@ -3,6 +3,10 @@ local NotificationHolder = loadstring(game:HttpGet("https://raw.githubuserconten
 local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Client.Lua"))()
 local inviteModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Discord%20Inviter/Source.lua"))()
 local s = VLib:Window("Warrior Hub", "Booga Classic", "W")
+local playerService = game:GetService("Players")
+local localPlayer = playerService.LocalPlayer
+local replicatedStorage = game:GetService("ReplicatedStorage")
+local workspace = game:GetService("Workspace")
 getgenv().notifColor = Color3.fromRGB(255, 0, 0)
 local function notif(text, duration)
     local notifModule = require(game:GetService("ReplicatedStorage").Modules.Client_Function_Bank)
@@ -245,6 +249,10 @@ end)
 Movement:Textbox("Fly Key", true,function(t)
     getgenv().flyKeybind = t
 end)
+Movement:Button("Fly 2 (Alt to Toggle, Ctrl to raise speed)", function()
+    loadstring(game:HttpGet("https://www.toptal.com/developers/hastebin/raw/pisarutiji"))()
+end)
+
 
 --Misc
 
@@ -645,7 +653,69 @@ end)
 Render:Button("UnnamedESP", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/ic3w0lf22/Unnamed-ESP/master/UnnamedESP.lua", true))()
 end)
-
+getgenv().changingArmor = false
+getgenv().armorColor = Color3.fromRGB(255, 0, 0)
+Render:Toggle("Change Armor Color (Not FE)",function(t)
+    getgenv().changingArmor = t
+    spawn(function()
+        while wait() and getgenv().changingArmor do
+            for i, v in pairs(localPlayer.Character:GetChildren()) do
+                if v.Name:find("Greaves") or v.Name:find("Chestplate") or v.Name:find("Mask") or v.Name:find("Helmet") or v.Name:find("Crown") or v.Name:find("Shoulder") then
+                    for i, v2 in pairs(v:GetChildren()) do
+                        if v2.ClassName == "Part" then
+                            v2.Color = getgenv().armorColor
+                        end
+                    end
+                end
+            end
+        end
+    end)
+end)
+Render:Colorpicker("Armor Color",Color3.fromRGB(255, 0, 0),function(t)
+    getgenv().armorColor = t
+end)
+getgenv().changingBag = false
+getgenv().bagColor = Color3.fromRGB(255, 0, 0)
+Render:Toggle("Change Bag Color (Not FE)",function(t)
+    getgenv().changingBag = t
+    spawn(function()
+        while wait() and getgenv().changingBag do
+            for i, v in pairs(localPlayer.Character:GetChildren()) do
+                if v.Name:find("Bag") then
+                    for i, v2 in pairs(v:GetChildren()) do
+                        if v2.ClassName == "Part" then
+                            v2.Color = getgenv().bagColor
+                        end
+                    end
+                end
+            end
+        end
+    end)
+end)
+Render:Colorpicker("Bag Color",Color3.fromRGB(255, 0, 0),function(t)
+    getgenv().bagColor = t
+end)
+getgenv().changingTools = false
+getgenv().toolsColor = Color3.fromRGB(255, 0, 0)
+Render:Toggle("Change Tools Color (Not FE)",function(t)
+    getgenv().changingTools = t
+    spawn(function()
+        while wait() and getgenv().changingTools do
+            for i, v in pairs(localPlayer.Character:GetChildren()) do
+                if v.Name:find("Stick") or v.Name:find("Pick") or v.Name:find("Axe") or v.Name:find("Hammer") or v.Name:find("Bow") or v.Name:find("Crossbow") then
+                    for i, v2 in pairs(v:GetChildren()) do
+                        if v2.Name == "Handle" or v2.Name == "Rod" or v2.Name == "Color" then
+                            v2.Color = getgenv().toolsColor
+                        end
+                    end
+                end
+            end
+        end
+    end)
+end)
+Render:Colorpicker("Tools Color",Color3.fromRGB(255, 0, 0),function(t)
+    getgenv().toolsColor = t
+end)
 
 
 --Building
