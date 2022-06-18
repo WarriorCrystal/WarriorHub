@@ -149,10 +149,11 @@ local function checkHealth()
 end
 local function heal()
     spawn(function()
-        while wait(1) and getgenv().HealthCheck == true do
+        while wait(0.5) and getgenv().HealthCheck == true do
             if getgenv().Health ~= 100 and getgenv().HealItem ~= nil then
                 repeat
                     game:GetService("ReplicatedStorage").Events.UseBagItem:FireServer(getgenv().HealItem)
+                    wait(0.05)
                 until getgenv().Health == 100
             end
         end
