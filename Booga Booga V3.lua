@@ -42,6 +42,7 @@ end)
 
 local Combat = s:Tab("Combat")
 getgenv().killing = false
+getgenv().killAuraRange = 20
 --thx to engo future for isAlive and canBeTargeted functions :) i'm too lazy to make something like this lol
 local function isAlive(plr)
     local plr = plr or game:GetService("Players").LocalPlayer
@@ -60,10 +61,10 @@ local function useAura()
         game:GetService("RunService").RenderStepped:Connect(function()
             if getgenv().killing then
                 for i, v in pairs(game:GetService("Players"):GetPlayers()) do
-                    if isAlive() and canBeTargeted(v, false) and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).magnitude < 20 then
+                    if isAlive() and canBeTargeted(v, false) and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).magnitude < getgenv().killAuraRange then
                         local rTV = game:GetService("ReplicatedStorage").RelativeTime.Value
                         local attackTable = {
-                            [1] = game:GetService("Workspace").Characters[v.Name].LeftUpperLeg,
+                            [1] = game:GetService("Workspace").Characters[v.Name].HumanoidRootPart,
                         }
                         game:GetService("ReplicatedStorage").Events.SwingTool:FireServer(rTV, attackTable)
                     end
@@ -75,6 +76,9 @@ end
 Combat:Toggle("Kill Aura",function(t)
     getgenv().killing = t
     useAura()
+end)
+Combat:Slider("Kill Aura Range",1,100,20,function(t)
+    getgenv().killAuraRange = t
 end)
 getgenv().tpspamv = nil
 getgenv().tpupval = 0
@@ -149,7 +153,6 @@ local function heal()
             if getgenv().Health ~= 100 and getgenv().HealItem ~= nil then
                 repeat
                     game:GetService("ReplicatedStorage").Events.UseBagItem:FireServer(getgenv().HealItem)
-                    wait(0.15)
                 until getgenv().Health == 100
             end
         end
@@ -288,14 +291,29 @@ Misc:Textbox("Auto Break Key", true,function(t)
     notif("Key set to " .. t, 3)
 end)
 getgenv().autoPickUpPicking = false
+getgenv().autoPickUpMode = "Normal"
+getgenv().aPUMWhitelist1 = nil
+getgenv().aPUMWhitelist2 = nil
+getgenv().aPUMWhitelist3 = nil
 local function useAutoPickUp()
     spawn(function()
         game:GetService("RunService").RenderStepped:Connect(function()
             if getgenv().autoPickUpPicking then
-                for _, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
-                    if v ~= nil and v.PrimaryPart ~= nil and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 20 then
-                        game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
+                if getgenv().autoPickUpMode == "Normal" then
+                    for _, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
+                        if v ~= nil and v.PrimaryPart ~= nil and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 15 then
+                            game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
+                        end
                     end
+                else do
+                    for _, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
+                        if v ~= nil and v.PrimaryPart ~= nil and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 15 then
+                            if v.Name == getgenv().aPUMWhitelist1 or v.Name == getgenv().aPUMWhitelist2 or v.Name == getgenv().aPUMWhitelist3 then
+                                game:GetService("ReplicatedStorage").Events.PickupItem:InvokeServer(v)
+                            end
+                        end
+                    end
+                end
                 end
             end
         end)
@@ -305,13 +323,25 @@ Misc:Toggle("Auto Pick Up",function(t)
     getgenv().autoPickUpPicking = t
     useAutoPickUp()
 end)
+Misc:Dropdown("Auto Pick Up Mode",{"Normal", "Whitelist"},function(t)
+    getgenv().autoPickUpMode = t
+end)
+Misc:Textbox("Auto Pick Up Whitelist 1", true,function(t)
+    getgenv().aPUMWhitelist1 = t
+end)
+Misc:Textbox("Auto Pick Up Whitelist 2", true,function(t)
+    getgenv().aPUMWhitelist2 = t
+end)
+Misc:Textbox("Auto Pick Up Whitelist 3", true,function(t)
+    getgenv().aPUMWhitelist3 = t
+end)
 getgenv().autoTPPUItem = nil
 getgenv().autoTPPickUpMode = "Item Select"
 getgenv().autoTPPickUp = false
 Misc:Toggle("Auto TP Pick Up",function(t)
     getgenv().autoTPPickUp = t
     spawn(function()
-        while getgenv().autoTPPickUp == true and wait(1.5) do
+        while getgenv().autoTPPickUp == true and wait(0.1) do
             if getgenv().autoTPPickUpMode == "Item Select" then
                 for _, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
                     if v ~= nil and v.Name == getgenv().autoTPPUItem then
@@ -469,6 +499,26 @@ Misc:Button("Craft Mag Set", function()
     game:GetService("ReplicatedStorage").Events.CraftItem:FireServer("Magnetite Axe")
     notif("Attemped to craft a Mag Set", 3)
 end)
+Misc:Dropdown("Places",{"First Floating Island", "Second Floating Island", "Third Floating Island", "Magnetite Cave", "Adurite Cave", "Ancient Cave"},function(t)
+    if t == "First Floating Island" then
+        game:GetService("Players").LocalPlayer.Character:MoveTo(Vector3.new(-129, 237, -748))
+    end
+    if t == "Second Floating Island" then
+        game:GetService("Players").LocalPlayer.Character:MoveTo(Vector3.new(-549, 311, -1211))
+    end
+    if t == "Third Floating Island" then
+        game:GetService("Players").LocalPlayer.Character:MoveTo(Vector3.new(-1132, 309, -1201))
+    end
+    if t == "Magnetite Cave" then
+        game:GetService("Players").LocalPlayer.Character:MoveTo(Vector3.new(-1173, 287, -1204))
+    end
+    if t == "Adurite Cave" then
+        game:GetService("Players").LocalPlayer.Character:MoveTo(Vector3.new(1131, -153, 1190))
+    end
+    if t == "Ancient Cave" then
+        game:GetService("Players").LocalPlayer.Character:MoveTo(Vector3.new(-1119, -179, -736))
+    end
+end)
 Misc:Dropdown("Shelly Teleports",{"Random Small Shelly", "Random Big Shelly", "Random Giant Shelly"},function(t)
     if t == "Random Small Shelly" then
         shelly = "Stone Shelly"
@@ -494,7 +544,7 @@ Misc:Dropdown("Ore and Other Teleports",{"Coal Node", "Iron Node", "Gold Node", 
         game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Resources[t].PrimaryPart.CFrame
     end
 end)
-Misc:Dropdown("Deployable Teleports",{"Chest", "Plant Box"},function(t)
+Misc:Dropdown("Deployable Teleports",{"Chest", "Plant Box", "Coin Press", "Raft", "Squad Raft"},function(t)
     game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Deployables[t].PrimaryPart.CFrame
 end)
 Misc:Dropdown("Lobbys",{"Unused Lobby", "Lobby"},function(t)
