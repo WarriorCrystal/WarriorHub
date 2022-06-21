@@ -329,12 +329,15 @@ Misc:Dropdown("Auto Pick Up Mode",{"Normal", "Whitelist"},function(t)
 end)
 Misc:Textbox("Auto Pick Up Whitelist 1", true,function(t)
     getgenv().aPUMWhitelist1 = t
+    notif("Whitelisted Item " .. t, 3)
 end)
 Misc:Textbox("Auto Pick Up Whitelist 2", true,function(t)
     getgenv().aPUMWhitelist2 = t
+    notif("Whitelisted Item " .. t, 3)
 end)
 Misc:Textbox("Auto Pick Up Whitelist 3", true,function(t)
     getgenv().aPUMWhitelist3 = t
+    notif("Whitelisted Item " .. t, 3)
 end)
 getgenv().autoTPPUItem = nil
 getgenv().autoTPPickUpMode = "Item Select"
@@ -753,7 +756,7 @@ Render:Toggle("Change Tools Color (Not FE)",function(t)
     spawn(function()
         while wait() and getgenv().changingTools do
             for i, v in pairs(localPlayer.Character:GetChildren()) do
-                if v.Name:find("Stick") or v.Name:find("Pick") or v.Name:find("Axe") or v.Name:find("Hammer") or v.Name:find("Bow") or v.Name:find("Crossbow") then
+                if v.Name:find("Stick") or v.Name:find("Pick") or v.Name:find("Axe") or v.Name:find("Hammer") or v.Name:find("Bow") or v.Name:find("Crossbow") or v.Name:find("Rock") then
                     for i, v2 in pairs(v:GetChildren()) do
                         if v2.Name == "Handle" or v2.Name == "Rod" or v2.Name == "Color" then
                             v2.Color = getgenv().toolsColor
