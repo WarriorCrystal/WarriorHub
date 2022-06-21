@@ -419,7 +419,7 @@ Render:Toggle("Change Tools Color (Not FE)",function(t)
     spawn(function()
         while wait() and getgenv().changingTools do
             for i, v in pairs(localPlayer.Character:GetChildren()) do
-                if v.Name:find("Stick") or v.Name:find("Pick") or v.Name:find("Axe") or v.Name:find("Hammer") or v.Name:find("Bow") or v.Name:find("Crossbow") then
+                if v.Name:find("Stick") or v.Name:find("Pick") or v.Name:find("Axe") or v.Name:find("Hammer") or v.Name:find("Bow") or v.Name:find("Crossbow") or v.Name:Find("Rock") then
                     for i, v2 in pairs(v:GetChildren()) do
                         if v2.Name == "Handle" or v2.Name == "Rod" or v2.Name == "Color" then
                             v2.Color = getgenv().toolsColor
