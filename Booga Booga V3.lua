@@ -262,6 +262,15 @@ end)
 
 
 local Misc = s:Tab("Misc")
+Misc:Button("Invisible Armor",function()
+    spawn(function()
+        for i, v in pairs(localPlayer.Character:GetChildren()) do
+            if v.Name:find("Greaves") or v.Name:find("Chestplate") or v.Name:find("Mask") or v.Name:find("Helmet") or v.Name:find("Crown") or v.Name:find("Shoulder") or v.Name:find("Bag") then
+                v.Handle:Destroy()
+            end
+        end
+    end)
+end)
 getgenv().abKey = "v"
 getgenv().breaking = false
 getgenv().abState = false
@@ -388,36 +397,22 @@ Misc:Textbox("Auto TP Pick Up Item", true, function(t)
     notif("Item set to " .. t, 3)
 end)
 getgenv().adItem = nil
-getgenv().adKey = "f"
-getgenv().dropping = false
-getgenv().autoDropState = false
-Misc:Toggle("Auto Drop (Hold Key)",function(t)
-    getgenv().autoDropState = t
-    spawn(function()
-        local mouse = game:GetService("Players").LocalPlayer:GetMouse()
-        mouse.KeyDown:connect(function(key)
-            if key == getgenv().adKey and getgenv().autoDropState then
-                getgenv().dropping = true
-                while getgenv().dropping and wait() do
-                    local asd = getgenv().adItem
-                    game:GetService("ReplicatedStorage").Events.DropBagItem:FireServer(asd)
-                end
-            end
-        end)
-        mouse.KeyUp:connect(function(key)
-            if key == getgenv().adKey then
-                getgenv().dropping = false
-            end
-        end)
-    end)
-end)
 Misc:Textbox("Auto Drop Item", true, function(t)
     getgenv().adItem = t
     notif("Item set to " .. t, 3)
 end)
-Misc:Textbox("Auto Drop Key", true, function(t)
-    getgenv().adKey = t
-    notif("Key set to " .. t, 3)
+getgenv().totalTimes2 = 1
+Misc:Slider("Auto Drop Times",1,100,1,function(t)
+    getgenv().totalTimes2 = t
+end)
+Misc:Button("Drop Items", function()
+    local times = 0
+    if getgenv().adItem ~= nil then
+        repeat
+            game:GetService("ReplicatedStorage").Events.DropBagItem:FireServer(getgenv().adItem)
+            times = times + 1
+        until times == getgenv().totalTimes2
+    end
 end)
 getgenv().EatItem = nil
 getgenv().HungerCheck = false
@@ -562,9 +557,6 @@ Misc:Dropdown("Lobbys",{"Unused Lobby", "Lobby"},function(t)
         coordinatesz = -4144
     end
     game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Players").LocalPlayer.Character:MoveTo(Vector3.new(coordinatesx, coordinatesy, coordinatesz))
-end)
-Misc:Button("Infinity Yield", function()
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
 end)
 Misc:Button("Server Hop", function()
     local Servers = game.HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/4787629450/servers/Public?sortOrder=Asc&limit=100"))
@@ -769,6 +761,25 @@ Render:Toggle("Change Tools Color (Not FE)",function(t)
 end)
 Render:Colorpicker("Tools Color",Color3.fromRGB(255, 0, 0),function(t)
     getgenv().toolsColor = t
+end)
+getgenv().changingClothes = false
+getgenv().clothesColor = Color3.fromRGB(255, 0, 0)
+Render:Toggle("Change Clothes Color (Not FE)",function(t)
+    getgenv().changingClothes = t
+    spawn(function()
+        while wait() and getgenv().changingClothes do
+            for i, v in pairs(localPlayer.Character:GetChildren()) do
+                if v.ClassName == "MeshPart" then
+                    if v.Name:find("Torso") or v.Name:find("Leg") or v.Name:find("Foot") then
+                        v.Color = getgenv().clothesColor
+                    end
+                end
+            end
+        end
+    end)
+end)
+Render:Colorpicker("Clothes Color",Color3.fromRGB(255, 0, 0),function(t)
+    getgenv().clothesColor = t
 end)
 
 
