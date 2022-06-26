@@ -1,7 +1,6 @@
 local VLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/vep1032/VepStuff/main/VL"))()
 local NotificationHolder = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Module.Lua"))()
 local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Client.Lua"))()
-local inviteModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Discord%20Inviter/Source.lua"))()
 local s = VLib:Window("Warrior Hub", "Booga Classic", "W")
 local playerService = game:GetService("Players")
 local localPlayer = playerService.LocalPlayer
@@ -24,7 +23,7 @@ Main:Button("Destroy GUI",function()
     game:GetService("CoreGui").Library:Destroy()
 end)
 Main:Button("Join Discord",function()
-    inviteModule.Join("https://discord.gg/EdHhqP7TzZ")
+    
 end)
 Main:Colorpicker("Notification Color",Color3.fromRGB(255, 0, 0),function(t)
     getgenv().notifColor = t
