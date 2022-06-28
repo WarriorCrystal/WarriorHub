@@ -22,9 +22,6 @@ Main:Label("Toggle GUI with RCTRL")
 Main:Button("Destroy GUI",function()
     game:GetService("CoreGui").Library:Destroy()
 end)
-Main:Button("Join Discord",function()
-    
-end)
 Main:Colorpicker("Notification Color",Color3.fromRGB(255, 0, 0),function(t)
     getgenv().notifColor = t
 end)
