@@ -1,11 +1,13 @@
 local VLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/vep1032/VepStuff/main/VL"))()
 local NotificationHolder = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Module.Lua"))()
 local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Client.Lua"))()
+local inviteModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Discord%20Inviter/Source.lua"))()
 local s = VLib:Window("Warrior Hub", "Booga Classic", "W")
 local playerService = game:GetService("Players")
 local localPlayer = playerService.LocalPlayer
 local replicatedStorage = game:GetService("ReplicatedStorage")
 local workspace = game:GetService("Workspace")
+local mouse = localPlayer:GetMouse()
 getgenv().notifColor = Color3.fromRGB(255, 0, 0)
 local function notif(text, duration)
     local notifModule = require(game:GetService("ReplicatedStorage").Modules.Client_Function_Bank)
@@ -21,6 +23,9 @@ Main:Label("Welcome to WarriorHub")
 Main:Label("Toggle GUI with RCTRL")
 Main:Button("Destroy GUI",function()
     game:GetService("CoreGui").Library:Destroy()
+end)
+Main:Button("Join Discord",function()
+    inviteModule.Join("https://discord.gg/EdHhqP7TzZ")
 end)
 Main:Colorpicker("Notification Color",Color3.fromRGB(255, 0, 0),function(t)
     getgenv().notifColor = t
@@ -51,6 +56,9 @@ local function canBeTargeted(plr, doTeamCheck)
         return true
     end
     return false
+end
+local function teamCheck(player)
+
 end
 local function useAura()
     spawn(function()
@@ -132,9 +140,67 @@ Combat:Textbox("Normal TP", true,function(t)
         end
     end
 end)
+getgenv().oneTimePanic = false
+getgenv().oneTimePanicKey = nil
+Combat:Toggle("Manual Panic",function(t)
+    getgenv().oneTimePanic = t
+    spawn(function()
+        while wait() do
+            mouse.KeyDown:connect(function(key)
+                if getgenv().oneTimePanicKey ~= nil and key == getgenv().oneTimePanicKey:lower() then
+                    if getgenv().oneTimePanic then
+                        localPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1682.2772216796875, -3.6036133766174316, -4133.912109375)
+                        wait(1)
+                    end
+                end
+            end)
+        end
+    end)
+end)
+Combat:Textbox("Manual Panic Key", true,function(t)
+    getgenv().oneTimePanicKey = t
+end)
+getgenv().autoPanic = false
+getgenv().autoPanicMode = "Bloodfruit"
+getgenv().autoPanicBlood = 100
+getgenv().autoPanicHealth = 30
+Combat:Toggle("Auto Panic",function(t)
+    getgenv().autoPanic = t
+    spawn(function()
+        game:GetService("RunService").RenderStepped:Connect(function()
+            if getgenv().autoPanic then
+                if getgenv().autoPanicMode == "Bloodfruit" then
+                    if not localPlayer.PlayerGui.MainGui.RightPanel.Inventory.List:FindFirstChild("Bloodfruit") or localPlayer.PlayerGui.MainGui.RightPanel.Inventory.List:FindFirstChild("Bloodfruit").QuantityImage.QuantityText.Text < getgenv().autoPanicBlood then
+                        localPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1682.2772216796875, -3.6036133766174316, -4133.912109375)
+                    end
+                else if getgenv().autoPanicMode == "Health" then
+                    if localPlayer.Character.Humanoid.Health < getgenv().autoPanicHealth then
+                        localPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1682.2772216796875, -3.6036133766174316, -4133.912109375)
+                    end
+                else if getgenv().autoPanicMode == "Combat Tag" then
+                    if localPlayer.Character.Head:FindFirstChild("LogNotice") then
+                        localPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1682.2772216796875, -3.6036133766174316, -4133.912109375)
+                    end
+                end
+                end
+                end
+            end
+        end)
+    end)
+end)
+Combat:Dropdown("Auto Panic Mode",{"Bloodfruit", "Combat Tag", "Health"},function(t)
+    getgenv().autoPanicMode = t
+end)
+Combat:Slider("Auto Panic Bloodfruit",0,2000,100,function(t)
+    getgenv().autoPanicBlood = t
+end)
+Combat:Slider("Auto Panic Health",1,100,30,function(t)
+    getgenv().autoPanicHealth = t
+end)
 getgenv().HealItem = nil
 getgenv().HealthCheck = false
 getgenv().Health = nil
+getgenv().HealHealth = 80
 local function checkHealth()
     spawn(function()
         while getgenv().HealthCheck == true and wait() do
@@ -146,11 +212,11 @@ end
 local function heal()
     spawn(function()
         while wait(0.5) and getgenv().HealthCheck == true do
-            if getgenv().Health ~= 100 and getgenv().HealItem ~= nil then
+            if getgenv().Health < getgenv().HealHealth and getgenv().HealItem ~= nil then
                 repeat
                     game:GetService("ReplicatedStorage").Events.UseBagItem:FireServer(getgenv().HealItem)
                     wait(0.05)
-                until getgenv().Health == 100
+                until getgenv().Health > getgenv().HealHealth
             end
         end
     end)
@@ -163,6 +229,9 @@ end)
 Combat:Textbox("Auto Heal Item", true,function(t)
     getgenv().HealItem = t
     notif("Item set to " .. t, 3)
+end)
+Combat:Slider("Auto Heal Health",1,100,80,function(t)
+    getgenv().HealHalth = t
 end)
 Combat:Label("Only works with equipped things")
 getgenv().equipment = "Magnetite"
@@ -647,7 +716,7 @@ AutoFarm:Toggle("Auto Plant",function(t)
         while getgenv().planting == true and wait() do
             for _, v in pairs(game:GetService("Workspace").Deployables:GetChildren()) do
                 if v.Name == "Plant Box" and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude < 60 then
-                    game.ReplicatedStorage.Events.InteractStructure:FireServer(v, getgenv().autoPlantPlant)
+                    replicatedStorage.Events.InteractStructure:FireServer(v, getgenv().autoPlantPlant)
                 end
             end
         end
@@ -873,4 +942,3 @@ Donators:Label("naruto10123n")
 Donators:Label("GalazyZane")
 Donators:Label("PepeeNob")
 Donators:Label("orba102 / H5CK")
-Donators:Label("Skiv")
