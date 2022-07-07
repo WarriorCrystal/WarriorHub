@@ -12,7 +12,7 @@ end
 if game.PlaceId == 9312552871 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/WarriorCrystal/WarriorHub/main/Raise%20a%20Floppa.lua"))()
 end
-if game.PlaceId == 5901346231 then
+if game.PlaceId == 5901346231 or game.PlaceId == 7169050717 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/WarriorCrystal/WarriorHub/main/Booga%20Hybrid.lua"))()
 end
 if game.PlaceId == 9500891570 then
@@ -21,6 +21,6 @@ end
 if game.PlaceId == 8131316275 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/WarriorCrystal/WarriorHub/main/Booga%20Booga%202019.lua"))()
 end
-if game.PlaceId ~= 4787629450 and game.PlaceId ~= 662417684 and game.PlaceId ~= 9203864304 and game.PlaceId ~= 5901346231 and game.PlaceId ~= 9312552871 and game.PlaceId ~= 8131316275 then
+if game.PlaceId ~= 4787629450 and game.PlaceId ~= 7169050717 and game.PlaceId ~= 662417684 and game.PlaceId ~= 9203864304 and game.PlaceId ~= 5901346231 and game.PlaceId ~= 9312552871 and game.PlaceId ~= 8131316275 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/WarriorCrystal/WarriorHub/main/Universal.lua"))()
 end
